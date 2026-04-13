@@ -2,6 +2,8 @@
 
 Complete workflow for creating a new agent skill from scratch. Produces a cross-platform SKILL.md with supporting resources, following the constraints-first design philosophy.
 
+**Distribution principle**: Skills created through this workflow are designed for distribution to end users. Every decision must account for recipients who have no prior setup — the skill package must be self-contained and work out of the box.
+
 ---
 
 ## Prerequisites
@@ -216,6 +218,37 @@ After completing the workflow, write a summary document to `docs/{skill-name}/{d
 - **Quality Verification**: Which red lines were checked, results
 - **Deliverable**: Final output with usage notes
 ```
+
+---
+
+## Step 6b: Self-Evolution Integration (Optional)
+
+**Decision point**: Should this skill learn and improve from its own usage over time?
+
+Consult `se-kit-integration.md` for the full integration guide.
+
+### When to Add
+
+| Skill Type | Recommendation |
+|-----------|---------------|
+| Analysis / decision skills | Recommended — accumulates domain experience |
+| Creative / generative skills | Recommended — learns style preferences from feedback |
+| Tool / transformation skills | Usually not needed — behavior is fixed |
+| Cognitive / thinking skills | Optional — can accumulate thinking pattern cases |
+
+### What It Does
+
+Bundles skill-se-kit (~48KB) inside the skill package. At runtime, after each task completion, the main agent dispatches a sub-agent to execute the self-evolution protocol:
+- Extract feedback from the completed task
+- Record experience to `se-workspace/experience/`
+- Update skill bank via decision tree (ADD/MERGE/SUPERSEDE/DISCARD)
+- Maintain audit trail in `se-workspace/audit/`
+
+The skill works identically without self-evolution enabled — it is a pure enhancement, not a dependency.
+
+### Key Constraint
+
+The skill-se-kit is bundled INTO the distributed skill package (inside `se-kit/` directory). End users do NOT need to install anything globally. The package is self-contained.
 
 ---
 

@@ -2,6 +2,8 @@
 
 Complete workflow for diagnosing and improving an existing agent skill. Takes a skill from its current quality level to the next, using structured diagnosis and targeted intervention.
 
+**Distribution principle**: Boosted skills are designed for redistribution. All upgrades must keep the skill self-contained — end users receive a complete package that works without prior setup.
+
 ---
 
 ## Prerequisites
@@ -17,6 +19,7 @@ Load Layer 3 references one at a time per phase, not all at once:
 - Phase 1.5 → load `platform-adaptation.md`, release after check
 - Phase 2.1 → load `anti-patterns-by-domain.md` for red-line design
 - Phase 2.3 → load `quality-ladder.md` again for upgrade path
+- Phase 1.6 / 2.3 → load `se-kit-integration.md` if self-evolution is relevant
 
 This keeps simultaneous context under 2500 words (boost-workflow + one reference).
 
@@ -85,6 +88,17 @@ For analysis/decision-type skills:
 - Are quality verification results recorded?
 
 **Output**: Observability gap assessment (if applicable).
+
+### 1.6 Self-Evolution Audit (Optional)
+
+Check if the skill would benefit from runtime self-evolution:
+
+1. **Already integrated?** Look for `se-kit/` directory and `se-workspace/` in the skill
+2. **If integrated**: Check `se-kit/SKILL.md` version against latest skill-se-kit release. If outdated, flag for upgrade in Phase 2
+3. **If not integrated**: Assess whether the skill type benefits from learning (analysis/creative → yes, tool/transformation → usually no)
+4. **If integrated and has data**: Review `se-workspace/skill_bank.json` — are accumulated skills being used? Is the experience log growing?
+
+**Output**: Self-evolution status (not integrated / integrated + current / integrated + outdated / integrated + underused) with recommendation.
 
 ### 1.5 Cross-Platform Compatibility Check
 
@@ -156,6 +170,12 @@ Same error × many locations. Fix before content rewrite.
 1. Define artifact template for the skill's output type
 2. Add artifact generation step to the workflow's delivery phase
 3. Specify output path convention
+
+**Self-evolution upgrade** (if recommended from Phase 1.6):
+
+- Not integrated + skill type benefits → integrate following `se-kit-integration.md`
+- Integrated + outdated → replace `se-kit/` contents with latest skill-se-kit release files. Per-skill data in `se-workspace/` is preserved (schemas are backward-compatible)
+- Integrated + underused → check if the self-evolution instructions in SKILL.md are clear enough for the agent to follow; strengthen if needed
 
 ---
 

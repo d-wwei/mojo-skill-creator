@@ -1,6 +1,24 @@
 # Design Philosophy
 
-Five principles for designing high-quality agent skills. Each principle is derived from proven practice (ljg-skills methodology) and applies regardless of target platform.
+Six principles for designing high-quality agent skills. Each principle applies regardless of target platform.
+
+---
+
+## 0. Distribution-First (分发优先)
+
+### Principle
+
+Skills created or upgraded through this tool are designed for distribution. Every design decision must be evaluated from the perspective of the end user who receives the skill package — not the author who creates it.
+
+### Implications
+
+- The skill package must be **self-contained**: no global installations, no assumed environment setup, no external dependencies the user must configure
+- Optional enhancements (self-evolution, observability) are bundled inside the package, not referenced externally
+- When an optional component (e.g., skill-se-kit) updates, the author upgrades the bundle and redistributes — end users never manage dependencies
+
+### Test
+
+Ask: "If someone downloads this skill package onto a fresh machine with only the agent installed, does everything work?" If no, something violates distribution-first.
 
 ---
 
