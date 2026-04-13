@@ -19,6 +19,7 @@ Load Layer 3 references one at a time per phase, not all at once:
 - Phase 1.5 → load `platform-adaptation.md`, release after check
 - Phase 1.6 → load `se-kit-integration.md` if self-evolution is relevant, release after
 - Phase 1.7 → no reference needed (uses web search / file reading for domain research)
+- Phase 1.8 → no reference needed (synthesis of all prior findings)
 - Phase 2.1 → load `anti-patterns-by-domain.md` for red-line design
 - Phase 2.3 → load `quality-ladder.md` for upgrade path, release, then load `se-kit-integration.md` if needed
 
@@ -113,29 +114,32 @@ Check if the skill would benefit from runtime self-evolution:
 
 ### 1.7 Domain Best Practice Research
 
-**This is the highest-leverage diagnostic step.** Before prescribing any content upgrade, study how the best humans do the task this skill automates.
+**This is the highest-leverage diagnostic step.** Follow `domain-research-guide.md` for the complete process. Key actions for boost context:
 
-1. **Identify the domain**: What real-world discipline does this skill map to?
-2. **Search for current best practices**:
-   - Who are the recognized leaders in this domain? (People, companies, teams)
-   - What workflows do they use? (Published processes, conference talks, books, interviews)
-   - What quality standards do they consider non-negotiable?
-   - What has changed recently? (New tools, new methodologies, shifts in the field)
-3. **Compare the skill's workflow to expert workflow**:
-   - Map the skill's current steps against expert workflow phases
-   - Identify missing phases (e.g., experts have an "exploration" phase that the skill skips)
-   - Identify mismatched emphasis (e.g., experts spend 40% of time on research, skill spends 5%)
-4. **Cross-disciplinary scan**: Does the structure of this task exist in another field? What tools did that field build?
+1. Identify the domain and find current best practitioners
+2. Study their workflows, principles, and quality standards
+3. **Compare** the skill's current workflow against expert workflow — map steps, find missing phases, identify emphasis mismatches
+4. Cross-disciplinary scan for structural insights
 
-**Output**: Research summary with: domain leaders studied, expert workflow mapping, gaps between skill and expert workflow, quality standards discovered, cross-disciplinary insights.
+**Output**: Research summary with expert workflow mapping and gaps.
 
-This output directly feeds Phase 2.3 (Content Upgrades) — expert workflows become the skill's upgraded workflow, expert standards become new red lines.
+### 1.8 Research Synthesis
+
+After all diagnostic steps (1.1–1.7), synthesize before prescribing. Follow the "Synthesis: Rethink Before Proceeding" section in `domain-research-guide.md`, plus:
+
+1. **Does the skill's workflow need structural redesign?** If the gap between current workflow and expert workflow is structural (missing phases, wrong sequence), content polish won't fix it.
+2. **Are the skill's principles still valid?** Cross-disciplinary insights may reveal the approach is misframed.
+3. **What does the quality bar actually look like?** Combine knowledge layer diagnosis (1.2) with expert standards (1.7).
+
+**Output**: Integrated diagnosis — determines whether Phase 2 prescribes surface fixes or fundamental redesign.
 
 ---
 
 ## Phase 2: Prescription
 
-Based on diagnosis, generate a targeted improvement plan. Defects are addressed in strict order: Architecture → Mechanical → Content.
+Based on the integrated diagnosis from Phase 1.8, generate a targeted improvement plan. If the synthesis concluded that a structural redesign is needed, the prescription starts there — not with surface fixes.
+
+Defects are addressed in strict order: Architecture → Mechanical → Content.
 
 ### 2.1 Architecture Fixes (if any)
 

@@ -40,55 +40,25 @@ There is a clear sense of: input types, output types, success criteria, and fail
 
 **Goal**: Study how the best humans do the task this skill automates. Their workflows, principles, and standards become the skill's foundation.
 
-Do NOT skip this step. A skill designed from abstract principles produces generic output. A skill designed from real expert workflows produces output with the depth and specificity that only domain experience can provide.
+Do NOT skip this step. A skill designed from abstract principles produces generic output. A skill designed from real expert workflows produces output with the depth that only domain experience provides.
 
-### 2a. Identify the Domain
+Follow the complete research process in `domain-research-guide.md`. The guide covers:
 
-From Step 1's examples, name the real-world discipline this skill maps to. Examples:
-- A writing skill → professional writing / journalism / copywriting
-- A design skill → product design / visual design / UX design
-- An analysis skill → research methodology / financial analysis / competitive intelligence
-- A code review skill → software engineering best practices
+1. **Identify the domain** — name the real-world discipline
+2. **Find the best practitioners** — leaders, companies, teams with proven track records
+3. **Extract workflow, principles, standards** — their actual operational process, not their marketing
+4. **Cross-disciplinary scan** — does the same problem structure exist in another field?
+5. **Synthesize and rethink** — lay all findings together, then ask:
+   - Does the skill need a fundamentally different workflow structure?
+   - Do expert principles contradict any initial assumptions?
+   - What should the quality bar actually look like?
+6. **Produce a research synthesis** — revised workflow design, quality standards, red line candidates, stance candidate
 
-### 2b. Find the Best Practitioners
+**The synthesis is the key output.** It feeds directly into Step 3 (red lines from expert standards), Step 3c (stance from expert mindset), and Step 6c (workflow from expert process).
 
-Search for how the best people and teams in this domain actually work:
+### Conclude When
 
-1. **Who are the recognized leaders?** (Individuals, companies, teams with proven track records)
-2. **What are their published workflows?** (Blog posts, conference talks, books, interviews where they share their actual process — not marketing, but real operational detail)
-3. **What frameworks does the industry use?** (Established methodologies, standards, certification bodies)
-4. **What do they consider non-negotiable?** (Quality standards that top practitioners never compromise on)
-
-### 2c. Extract Workflow, Principles, and Standards
-
-From the research, extract three things:
-
-1. **Workflow**: What phases do experts go through? In what order? What are the decision points and checkpoints? Where do they explore vs. commit?
-2. **Principles**: What do they believe about quality? What trade-offs do they make? What do they prioritize when resources are constrained?
-3. **Standards**: What are their quality bars? What makes output "good enough" vs. "actually good"? What do they reject?
-
-### 2d. Cross-Disciplinary Scan (Optional)
-
-Ask: Does the structure of this task exist in another field? If so, what tools did that field build for it?
-
-Examples from practice:
-- Design skill → Apple's "Creative Selection" (natural selection analogy — generate many variants, let the best survive)
-- Analysis skill → scientific method (hypothesis → experiment → evidence, not conclusion → justification)
-- Writing skill → journalism (inverted pyramid, fact-checking protocols)
-
-### 2e. Map to Skill Design
-
-Translate research findings into skill design inputs:
-
-| Research Finding | Maps To |
-|-----------------|---------|
-| Expert workflow phases | Skill's workflow steps (Step 5) |
-| Expert quality standards | Red lines and acceptance criteria (Step 3) |
-| Expert principles | Skill's stance (Step 3c) |
-| Expert anti-patterns ("never do X") | Domain-specific red lines (Step 3a) |
-| Cross-disciplinary insights | Novel workflow steps or quality checks |
-
-**Output**: A research summary documenting: domain leaders studied, key workflow insights, quality standards discovered, and how each maps to the skill being built.
+A research synthesis document exists with: domain leaders studied, revised workflow design, quality standards, red line candidates, and open questions.
 
 ---
 

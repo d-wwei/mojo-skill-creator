@@ -55,5 +55,6 @@ Full treatment: `references/design-philosophy.md` (~900w)
 | `references/design-philosophy.md` (~900w) | 6 design principles with examples | Designing red lines, stance, structure |
 | `references/platform-adaptation.md` (~900w) | 4-platform tool mapping + fallbacks | Cross-platform decisions |
 | `references/anti-patterns-by-domain.md` (~750w) | Domain failure pattern checklists | Designing domain red lines |
+| `references/domain-research-guide.md` (~800w) | How to study expert workflows + synthesize findings | `new` Step 2 / `boost` Phase 1.7-1.8 |
 | `references/quality-ladder.md` (~960w) | Knowledge layer diagnosis + case methodology | `boost` diagnosis |
 | `references/se-kit-integration.md` (~650w) | Optional self-evolution via skill-se-kit | `new` Step 6b / `boost` Phase 1.6 |
