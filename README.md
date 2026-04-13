@@ -2,81 +2,68 @@
 
 # Mojo Skill Creator
 
-Build agent skills that don't waste tokens, don't lock you into one platform, and don't fall apart when someone else tries to use them.
+A methodology for building AI agent skills that are actually good — not just structurally correct.
 
-## Why This Exists
+## The Problem With Most Skills
 
-We had 100+ skills installed across Claude Code, Codex, and Gemini CLI. Most of them shared the same problem: they were written for the author's machine, not for anyone else's.
+Most AI agent skills pass validation. The frontmatter is right, the directory structure is clean, the description triggers correctly. But the output is generic. Run the same skill on two different tasks and the results have different words but the same skeleton — same rhythm, same depth, same lack of personality.
 
-Some assumed you had a global Python package installed. Others used Claude Code-specific tool names that broke on Codex. A few dumped 4,000 words into the context window every time they loaded, whether you needed 10% of it or all of it.
+The gap isn't in structure. It's in design methodology.
 
-The existing skill creators (Anthropic's built-in, the superpowers plugin) were good at validating structure. They'd tell you if your frontmatter was wrong. But they didn't help you *design* a good skill — one with actual quality controls, one that worked on four platforms, one that wouldn't eat half your agent's context for breakfast.
+Existing skill creators tell you *how to package a skill*. None of them tell you *how to design a skill that produces distinctive, reliable output*. That's the difference between a skill that validates and a skill that works.
 
-So we built this.
+## What Mojo Brings
 
-## What It Does
+Mojo combines two proven methodologies that attack quality from opposite directions:
 
-Two commands. One for creating, one for upgrading.
+### Locking the Floor: Constraint-Driven Design
 
-**`new`** walks you through 8 steps: understand the use cases, design red lines and acceptance criteria before writing anything, plan the token budget, build the skill, optionally add self-evolution and human auditability, validate across platforms, then iterate.
+From deep analysis of [ljg-skills](https://github.com/lijigang/ljg-skills) — 14 skills that consistently produce output with character, not just correctness.
 
-**`boost`** diagnoses an existing skill on four axes — structural quality, knowledge depth, token efficiency, cross-platform compatibility — then prescribes targeted fixes in strict order: architecture first, mechanical second, content last.
+The key insight: **telling an agent what NOT to do is more effective than telling it what to do.** "No sentence may contain more than one subordinate clause" is checkable — scan every sentence. "Write clearly" is not checkable — it means different things to different agents.
 
-Both produce self-contained packages. The person who receives your skill installs it with a symlink and starts using it. No README to read, no setup to run.
+What this translates to in practice:
 
-## How It Works
+- **Red lines before workflows.** A skill defines 5-10 unbreakable constraints before it defines a single step. Each constraint has a mechanical check method. The quality floor is set before the first word of content.
+- **Stance over role.** "You are a senior writing coach" produces imitation. "Not teaching, not presenting, not chatting. Show your wrong turns first, then the direction" produces a precise cognitive position. One order of magnitude more specific.
+- **Acceptance criteria upfront.** Before writing anything, define 3-5 testable conditions for "done." Test: would two independent reviewers agree on pass/fail? If they'd argue, the criterion is too vague.
+- **Domain anti-pattern libraries.** Writing skills get anti-patterns for writing (passive stacking, AI-slop phrases, translation tone). Visual skills get anti-patterns for visual (pure black, Inter font, equal-thirds layout). Each item is a binary check.
 
-The core insight: a skill's SKILL.md shouldn't contain everything. It should contain just enough to route to the right workflow.
+### Raising the Ceiling: Knowledge Layer Methodology
 
-```
-Layer 0: Metadata       ~100 words    Always in context (name + description for trigger matching)
-Layer 1: Router          ≤500 words    Loaded when skill activates — principles, red lines, pointers
-Layer 2: Workflow       ≤2000 words    Only ONE sub-command's workflow loaded per invocation
-Layer 3: Reference       On-demand     Deep material pulled only when the agent actually needs it
-```
+From real-world skill improvement practice — systematically upgrading a 66-brand design system from generic to distinctive.
 
-This skill is its own proof. The SKILL.md is 475 words. It routes to 7 reference files totaling ~7,500 words. But an agent running `new` only loads ~2,000 words at a time. An agent running `boost` loads a different ~2,000. The remaining 5,500 words never enter context unless specifically requested.
+The key insight: **skills operate at one of three knowledge layers, and the upgrade path between layers is different.**
 
-**The file structure:**
+| Layer | How Output Looks | Diagnostic |
+|-------|-----------------|------------|
+| **Principles** | Correct but generic. All projects look like the same template. | Give two very different tasks. If outputs differ only in surface content — same structure, rhythm, spacing — it's Layer 1. |
+| **Patterns** | Recognizes scenarios and applies appropriate patterns. Stable but no identity. | Ask for output "in the style of X." If it gets the category right but misses the specific parameters — Layer 2. |
+| **Cases** | Has clear identity. Can detect and correct errors against specific references. | Produce output in a reference style, then introduce a deliberate error. If the skill catches it — Layer 3. |
 
-```
-mojo-skill-creator/
-├── SKILL.md                          # 475-word router
-├── references/
-│   ├── new-workflow.md               # 8-step creation (loaded for `new`)
-│   ├── boost-workflow.md             # 4-phase diagnosis (loaded for `boost`)
-│   ├── design-philosophy.md          # 6 principles — loaded when designing
-│   ├── platform-adaptation.md        # Tool name mapping for 4 platforms
-│   ├── anti-patterns-by-domain.md    # Failure checklists by domain
-│   ├── quality-ladder.md             # Knowledge layer diagnosis method
-│   └── se-kit-integration.md         # Optional self-evolution bundling
-└── LICENSE-apache2.0
-```
+Moving from Layer 1 to 2 requires adding scenario-specific patterns. Moving from 2 to 3 requires building a case asset library — benchmark references with four dimensions each (parameters, operation guide, quality floor, intuition check). Every case entry must pass the specificity test: remove the name — can someone still identify which case it describes?
 
-## What Makes It Different
+### Two Sides of the Same Problem
 
-**From Anthropic's skill-creator:** That tool validates structure (frontmatter, directories). This one teaches design — red lines before workflows, stance instead of role, token budgets before content. Structure validation is table stakes; design methodology is the gap.
+ljg's methodology locks the floor: output cannot be worse than the red lines allow.
+The knowledge layer methodology raises the ceiling: output becomes increasingly specific and distinctive.
 
-**From "just write a good SKILL.md":** Every skill created through Mojo ships with mechanically checkable constraints. "No acceptance criterion requiring subjective judgment" isn't a suggestion — it's a red line with a concrete test: two independent reviewers must agree on pass/fail. If they'd disagree, the criterion is too vague.
+Together they address what neither does alone — skills that are both *reliable* (never below the floor) and *good* (clearly above generic).
 
-**From single-platform tools:** Instructions use semantic verbs ("read the file", "search the codebase"), not platform tool names (`Read`, `read_file`, `grep_search`). One skill, four platforms, zero adaptation needed.
+## Two Commands
 
-## The 6 Design Principles
+**`new`** — Build a skill from scratch. 8 steps: understand use cases → design red lines and acceptance criteria (before writing anything) → plan token budget → identify reusable resources → create the skill → optionally add self-evolution and human auditability → cross-platform validation → iterate.
 
-| # | Principle | One-liner |
-|---|-----------|-----------|
-| 1 | **Distribution-first** | The end user's machine has nothing pre-installed. Design for that. |
-| 2 | **Constraints before guidance** | Tell the agent what NOT to do. Constraints are checkable; aspirations aren't. |
-| 3 | **Acceptance criteria upfront** | Define "done" before writing a single word. |
-| 4 | **Stance over role** | "Thinks in constraints, not instructions" beats "You are an expert skill architect." |
-| 5 | **Atomic + composable** | One skill, one job. Complex = composition. |
-| 6 | **4-layer token architecture** | Load only what you need, when you need it. |
+**`boost`** — Diagnose and upgrade an existing skill. 4 phases: diagnosis (structural audit + knowledge layer + token efficiency + cross-platform check) → prescription (architecture → mechanical → content, in strict order) → execution → report.
 
-## Optional: Self-Evolution
+## Also Handles the Engineering
 
-Skills can bundle [skill-se-kit](https://github.com/d-wwei/skill-se-kit) (~48KB) for runtime learning. After each task, a sub-agent extracts feedback and updates a skill bank — the skill gets better with use.
+The methodology is the core. But the engineering matters too — a well-designed skill that only works on one platform or eats the entire context window still fails in practice.
 
-The se-kit is bundled inside the skill package. End users don't install anything extra. When se-kit releases a new version, the skill author runs `boost`, updates the bundled copy, and redistributes. Users never manage dependencies.
+- **Cross-platform:** Skills work on Claude Code, Codex, Gemini CLI, and OpenClaw. Instructions use semantic verbs, not platform tool names.
+- **Token-efficient:** 4-layer architecture — metadata → router (≤500w) → workflow (≤2000w) → reference (on-demand). This skill's own SKILL.md is 475 words.
+- **Distribution-ready:** Self-contained packages. End users symlink and use. No global installs, no setup scripts, no README required.
+- **Optionally self-evolving:** Skills can bundle [skill-se-kit](https://github.com/d-wwei/skill-se-kit) (~48KB) for runtime learning. A sub-agent handles feedback extraction — zero token impact on the main skill.
 
 ## Quick Start
 
@@ -86,29 +73,34 @@ git clone https://github.com/d-wwei/mojo-skill-creator.git
 
 # 2. Symlink to your agent
 ln -sf "$(pwd)/mojo-skill-creator" ~/.claude/skills/mojo-skill-creator
-# Or for Codex/Gemini: ln -sf ... ~/.agents/skills/mojo-skill-creator
+# Codex/Gemini: ln -sf ... ~/.agents/skills/mojo-skill-creator
 
 # 3. Use it
-# Tell your agent: "Create a new skill" or "Boost this skill"
-# Mojo activates automatically from the trigger phrases in its description.
+# "Create a new skill" → activates `new`
+# "Boost this skill" → activates `boost`
 ```
 
-## Platforms
+## Project Structure
 
-| Platform | Skill Path | Project Instructions |
-|----------|-----------|---------------------|
-| Claude Code | `~/.claude/skills/` | `CLAUDE.md` |
-| Codex | `~/.agents/skills/` | `AGENTS.md` |
-| Gemini CLI | `~/.gemini/skills/` | `GEMINI.md` |
-| OpenClaw | `~/.openclaw/skills/` | — |
+```
+mojo-skill-creator/
+├── SKILL.md                          # 475-word router
+├── references/
+│   ├── new-workflow.md               # 8-step creation workflow
+│   ├── boost-workflow.md             # 4-phase diagnosis + upgrade
+│   ├── design-philosophy.md          # 6 design principles with examples
+│   ├── platform-adaptation.md        # 4-platform tool mapping + fallbacks
+│   ├── anti-patterns-by-domain.md    # Writing / visual / analysis / teaching
+│   ├── quality-ladder.md             # Knowledge layer diagnosis method
+│   └── se-kit-integration.md         # Optional self-evolution bundling
+└── LICENSE-apache2.0
+```
 
-## Built On
+## Methodology Sources
 
-Three methodologies, combined:
-
-- **Anthropic's skill-creator** (Apache 2.0) — 6-step creation process, progressive disclosure, SKILL.md format conventions.
-- **ljg-skills analysis** — Constraint-driven design, "stance over role", acceptance criteria upfront, domain anti-pattern libraries. From a [deep analysis](https://github.com/lijigang/ljg-skills) of 14 skills that prioritize quality floors over feature ceilings.
-- **Human-workflow methodology** — Knowledge layer diagnosis (Principles → Patterns → Cases), case asset libraries, constraint tightening gradients, defect-layer repair ordering. Extracted from real-world skill improvement on a 66-brand design system.
+- **[ljg-skills](https://github.com/lijigang/ljg-skills)** — 14 skills that prioritize quality floors over feature ceilings. Constraint-driven design, stance over role, domain anti-pattern libraries.
+- **Human-workflow methodology** — Knowledge layer diagnosis, case asset libraries, constraint tightening gradients, defect-layer repair ordering. From a 66-brand design system improvement (199 files, 19,209 lines, ~45 minutes with parallel agents).
+- **[Anthropic skill-creator](https://github.com/anthropics/claude-code)** (Apache 2.0) — 6-step creation process, progressive disclosure, SKILL.md format conventions.
 
 ## License
 
