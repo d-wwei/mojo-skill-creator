@@ -23,7 +23,7 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 - **`new`** — 9 步引导流程，从零创建技能，从领域专家研究开始
 - **`boost`** — 4 阶段诊断升级流程，针对已有技能
 
-产出的每个技能都跨平台（Claude Code、Codex、Gemini CLI、OpenClaw）、自包含可分发、Token 高效。
+产出的每个技能都跨平台（Claude Code、Codex、Gemini CLI、OpenClaw）且 Token 高效。
 
 ## 关键特性
 
@@ -37,7 +37,7 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 
 - **默认跨平台。** 指令使用语义化动词（「读取文件」「搜索代码库」），不用平台特有工具名。一个技能包在四个平台上直接可用，不需要适配。
 
-- **分发就绪。** 产出的每个技能都自包含。不需要全局安装，不假设环境配置。终端用户 symlink 即用。可选组件（如通过 [skill-se-kit](https://github.com/d-wwei/skill-se-kit) 实现的自进化）打包在技能内部，不依赖外部引用。
+- **可选自进化。** 技能可以打包 [skill-se-kit](https://github.com/d-wwei/skill-se-kit)（~48KB）来从自身使用中学习。每次任务完成后，子 Agent 提取反馈、记录经验、更新技能库——技能随使用自动改进，无需手动干预。se-kit 打包在技能内部，终端用户不需要额外安装。技能作者通过 `boost` 更新打包版本后重新分发。
 
 ## 用与不用的对比
 
@@ -49,7 +49,7 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 | **质量诊断** | 「感觉很泛」 | 可测量：原则层 / 模式层 / 案例层，各有升级路径 |
 | **Token 开销** | 每次全量加载 | 只加载当前调用需要的工作流 |
 | **平台支持** | 跑在作者的平台上 | Claude Code、Codex、Gemini CLI、OpenClaw |
-| **分发** | 「先全局装 X，再配置 Y」 | Symlink 即用，没有别的 |
+| **运行时学习** | 静态——部署后不会改进 | 可选自进化：技能从使用中学习，积累领域经验 |
 
 ## 怎么工作
 
@@ -84,7 +84,6 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 | 约束先于流程 | 受 ljg-skills 影响。可检验的约束（「每句不超过一个从句」）比理想化指导（「写好一点」）能捕获更多失败模式。 |
 | 姿态替代角色 | 「不教课，不聊天——先亮弯路，再给方向」比「你是资深写作教练」产出的行为更精确。 |
 | 四层 Token 架构 | 大多数技能每次调用都加载大量无关材料。分层让每次调用保持精简。 |
-| 分发优先 | 终端用户什么都没装。所有可选组件（se-kit、assets）打包在包内。 |
 
 ## 安装
 

@@ -21,7 +21,7 @@ Mojo Skill Creator is itself an AI agent skill (SKILL.md + 8 reference files, ~8
 - **`new`** — A 9-step guided process to create a skill from scratch, starting with domain expert research
 - **`boost`** — A 4-phase diagnostic and upgrade process for existing skills
 
-Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenClaw), self-contained for distribution, and token-efficient by design.
+Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenClaw) and token-efficient by design.
 
 ## Key Features
 
@@ -35,7 +35,7 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 
 - **Cross-platform by default.** Instructions use semantic verbs ("read the file," "search the codebase"), not platform tool names. One skill package works on all four supported platforms without modification.
 
-- **Distribution-ready.** Every skill produced is self-contained. No global installs, no environment assumptions. End users symlink and use. Optional components (like self-evolution via [skill-se-kit](https://github.com/d-wwei/skill-se-kit)) are bundled inside the package, not referenced externally.
+- **Optional self-evolution.** Skills can bundle [skill-se-kit](https://github.com/d-wwei/skill-se-kit) (~48KB) to learn from their own usage. After each task, a sub-agent extracts feedback, records experience, and updates a skill bank — the skill improves over time without manual intervention. The se-kit is packaged inside the skill, so end users don't need to install anything extra. Skill authors update the bundled version via `boost` and redistribute.
 
 ## With and Without
 
@@ -47,7 +47,7 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 | **Quality diagnosis** | "It feels generic" | Measured: Layer 1 / 2 / 3 with specific upgrade path |
 | **Token cost** | Full skill in context every time | Only the relevant workflow loads per invocation |
 | **Platform support** | Works on the author's platform | Works on Claude Code, Codex, Gemini CLI, OpenClaw |
-| **Distribution** | "Install X globally, set up Y" | Symlink and use. Nothing else. |
+| **Runtime learning** | Static — never improves after deployment | Optional self-evolution: skill learns from usage, accumulates domain experience |
 
 ## How It Works
 
@@ -82,7 +82,6 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 | Constraints before workflows | Influenced by ljg-skills. Checkable constraints ("no more than one clause per sentence") catch more failure modes than aspirational guidance ("write well"). |
 | Stance over role | "Not teaching, not chatting — show your wrong turns first" produces more precise behavior than "you are an expert writing coach." |
 | 4-layer token architecture | Most skills waste context loading material irrelevant to the current invocation. Layer separation keeps each invocation lean. |
-| Distribution-first | End users have nothing pre-installed. Every optional component (se-kit, assets) bundled inside the package. |
 
 ## Installation
 
