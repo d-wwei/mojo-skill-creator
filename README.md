@@ -4,104 +4,124 @@
 
 A methodology for building AI agent skills that are actually good — not just structurally correct.
 
-## The Problem With Most Skills
+## The Problem
 
-Most AI agent skills pass validation. The frontmatter is right, the directory structure is clean, the description triggers correctly. But the output is generic. Run the same skill on two different tasks and the results have different words but the same skeleton — same rhythm, same depth, same lack of personality.
+Most AI agent skills validate fine. Clean frontmatter, proper directories, correct triggers. But the output is flat. Two different tasks produce two sets of words stretched over the same skeleton — same depth, same rhythm, same lack of character.
 
-The gap isn't in structure. It's in design methodology.
+The gap isn't technical. It's methodological. Existing skill creators teach you how to package a skill. None of them teach you how to design one that produces output a domain expert would recognize as competent.
 
-Existing skill creators tell you *how to package a skill*. None of them tell you *how to design a skill that produces distinctive, reliable output*. That's the difference between a skill that validates and a skill that works.
+## The Core Idea
 
-## What Mojo Brings
+Before writing a single red line or workflow step, **go study how the best humans do the task your skill automates.**
 
-Mojo combines two proven methodologies that attack quality from opposite directions:
+This is not a metaphor. It's the literal first step:
+
+1. Name the real-world discipline your skill maps to
+2. Find the recognized leaders — people, companies, teams with proven track records
+3. Study their actual workflows — conference talks, published processes, interviews where they share operational detail (not marketing)
+4. Extract their quality standards — what do they reject? What's non-negotiable?
+5. Scan across disciplines — does the same problem structure exist elsewhere?
+
+Expert workflows become the skill's workflow. Expert standards become the skill's red lines. Expert mindset becomes the skill's stance.
+
+### How This Played Out in Practice
+
+When improving a frontend design skill, this research step uncovered: Apple's "Creative Selection" (500 prototypes for one package design), Linear's "design is search, not a production pipeline", Stripe's three-layer quality standard (Utility + Usability + Beauty), and Airbnb's physical side-by-side audits.
+
+None of these insights came from design principles or AI prompt engineering. They came from studying what the best teams actually do. The result: a 6-phase workflow with an exploration stage before commitment, multiple directions for comparison instead of one "best guess", and a constraint tightening gradient — loose during exploration, strict at delivery.
+
+That skill's specificity test pass rate went from ~20% to ~85%. The methodology works because it imports real expertise, not abstract rules.
+
+## Two Mechanisms Built on Research
+
+Domain research provides the raw material. Two mechanisms turn it into skill quality:
 
 ### Locking the Floor: Constraint-Driven Design
 
-From deep analysis of [ljg-skills](https://github.com/lijigang/ljg-skills) — 14 skills that consistently produce output with character, not just correctness.
+From [ljg-skills](https://github.com/lijigang/ljg-skills) — 14 skills that consistently produce output with character.
 
-The key insight: **telling an agent what NOT to do is more effective than telling it what to do.** "No sentence may contain more than one subordinate clause" is checkable — scan every sentence. "Write clearly" is not checkable — it means different things to different agents.
+**Tell the agent what NOT to do.** "No sentence may contain more than one subordinate clause" is checkable. "Write clearly" is not. Red lines sourced from expert quality standards (discovered during research) are more effective than red lines invented from abstract principles.
 
-What this translates to in practice:
+In practice:
+- **Red lines before workflows.** 5-10 unbreakable constraints, each with a mechanical check method, defined before writing any content.
+- **Stance over role.** A cognitive position ("not teaching, not presenting — show your wrong turns first, then the direction") instead of an identity ("you are an expert").
+- **Acceptance criteria upfront.** 3-5 testable conditions for "done", informed by the quality bars experts actually use.
 
-- **Red lines before workflows.** A skill defines 5-10 unbreakable constraints before it defines a single step. Each constraint has a mechanical check method. The quality floor is set before the first word of content.
-- **Stance over role.** "You are a senior writing coach" produces imitation. "Not teaching, not presenting, not chatting. Show your wrong turns first, then the direction" produces a precise cognitive position. One order of magnitude more specific.
-- **Acceptance criteria upfront.** Before writing anything, define 3-5 testable conditions for "done." Test: would two independent reviewers agree on pass/fail? If they'd argue, the criterion is too vague.
-- **Domain anti-pattern libraries.** Writing skills get anti-patterns for writing (passive stacking, AI-slop phrases, translation tone). Visual skills get anti-patterns for visual (pure black, Inter font, equal-thirds layout). Each item is a binary check.
+### Raising the Ceiling: Knowledge Layer Diagnosis
 
-### Raising the Ceiling: Knowledge Layer Methodology
+From real-world skill improvement practice on a 66-brand design system.
 
-From real-world skill improvement practice — systematically upgrading a 66-brand design system from generic to distinctive.
+Skills operate at one of three layers:
 
-The key insight: **skills operate at one of three knowledge layers, and the upgrade path between layers is different.**
+| Layer | Output Looks Like | Upgrade Path |
+|-------|------------------|-------------|
+| **Principles** | Correct but generic — all projects share the same template | Add scenario-specific patterns |
+| **Patterns** | Recognizes scenarios, stable quality, but no identity | Build case asset library from domain leaders |
+| **Cases** | Clear identity, can detect and correct errors | Maintain and deepen benchmark references |
 
-| Layer | How Output Looks | Diagnostic |
-|-------|-----------------|------------|
-| **Principles** | Correct but generic. All projects look like the same template. | Give two very different tasks. If outputs differ only in surface content — same structure, rhythm, spacing — it's Layer 1. |
-| **Patterns** | Recognizes scenarios and applies appropriate patterns. Stable but no identity. | Ask for output "in the style of X." If it gets the category right but misses the specific parameters — Layer 2. |
-| **Cases** | Has clear identity. Can detect and correct errors against specific references. | Produce output in a reference style, then introduce a deliberate error. If the skill catches it — Layer 3. |
-
-Moving from Layer 1 to 2 requires adding scenario-specific patterns. Moving from 2 to 3 requires building a case asset library — benchmark references with four dimensions each (parameters, operation guide, quality floor, intuition check). Every case entry must pass the specificity test: remove the name — can someone still identify which case it describes?
-
-### Two Sides of the Same Problem
-
-ljg's methodology locks the floor: output cannot be worse than the red lines allow.
-The knowledge layer methodology raises the ceiling: output becomes increasingly specific and distinctive.
-
-Together they address what neither does alone — skills that are both *reliable* (never below the floor) and *good* (clearly above generic).
+The upgrade path at each layer is different. Applying Layer 3 techniques to a Layer 1 skill wastes effort. Diagnosis first, then targeted intervention.
 
 ## Two Commands
 
-**`new`** — Build a skill from scratch. 8 steps: understand use cases → design red lines and acceptance criteria (before writing anything) → plan token budget → identify reusable resources → create the skill → optionally add self-evolution and human auditability → cross-platform validation → iterate.
+**`new`** — 9 steps. The critical addition: Step 2 is Domain Best Practice Research, which feeds everything downstream.
 
-**`boost`** — Diagnose and upgrade an existing skill. 4 phases: diagnosis (structural audit + knowledge layer + token efficiency + cross-platform check) → prescription (architecture → mechanical → content, in strict order) → execution → report.
+```
+1. Understand use cases → 2. Research domain best practices ★ →
+3. Design red lines + acceptance criteria (from research) →
+4. Plan token architecture → 5. Plan resources → 6. Create the skill →
+7. Human observability (optional) → 8. Cross-platform validation → 9. Iterate
+```
 
-## Also Handles the Engineering
+**`boost`** — 4 phases. Phase 1.7 is Domain Best Practice Research, comparing the skill's current workflow against expert workflow.
 
-The methodology is the core. But the engineering matters too — a well-designed skill that only works on one platform or eats the entire context window still fails in practice.
+```
+Phase 1: Diagnose (structure + knowledge layer + efficiency + domain research ★)
+Phase 2: Prescribe (architecture → mechanical → content, strict order)
+Phase 3: Execute (repair in order, verify after each category)
+Phase 4: Report (human-auditable boost summary)
+```
 
-- **Cross-platform:** Skills work on Claude Code, Codex, Gemini CLI, and OpenClaw. Instructions use semantic verbs, not platform tool names.
-- **Token-efficient:** 4-layer architecture — metadata → router (≤500w) → workflow (≤2000w) → reference (on-demand). This skill's own SKILL.md is 475 words.
-- **Distribution-ready:** Self-contained packages. End users symlink and use. No global installs, no setup scripts, no README required.
-- **Optionally self-evolving:** Skills can bundle [skill-se-kit](https://github.com/d-wwei/skill-se-kit) (~48KB) for runtime learning. A sub-agent handles feedback extraction — zero token impact on the main skill.
+## Engineering
+
+The methodology is the core. The engineering keeps it practical:
+
+- **Cross-platform.** Claude Code, Codex, Gemini CLI, OpenClaw. Semantic verbs, no platform tool names.
+- **Token-efficient.** 4-layer architecture — this skill's own SKILL.md is 478 words. Only one workflow loads per invocation.
+- **Distribution-ready.** Self-contained packages. End users symlink and use. No global installs.
+- **Optionally self-evolving.** Bundle [skill-se-kit](https://github.com/d-wwei/skill-se-kit) (~48KB) for runtime learning via sub-agent.
 
 ## Quick Start
 
 ```bash
-# 1. Clone
 git clone https://github.com/d-wwei/mojo-skill-creator.git
-
-# 2. Symlink to your agent
 ln -sf "$(pwd)/mojo-skill-creator" ~/.claude/skills/mojo-skill-creator
-# Codex/Gemini: ln -sf ... ~/.agents/skills/mojo-skill-creator
-
-# 3. Use it
-# "Create a new skill" → activates `new`
-# "Boost this skill" → activates `boost`
+# Or: ~/.agents/skills/ for Codex/Gemini
 ```
+
+Then: "Create a new skill" or "Boost this skill."
 
 ## Project Structure
 
 ```
 mojo-skill-creator/
-├── SKILL.md                          # 475-word router
+├── SKILL.md                          # 478-word router
 ├── references/
-│   ├── new-workflow.md               # 8-step creation workflow
-│   ├── boost-workflow.md             # 4-phase diagnosis + upgrade
-│   ├── design-philosophy.md          # 6 design principles with examples
+│   ├── new-workflow.md               # 9-step creation (Step 2 = domain research)
+│   ├── boost-workflow.md             # 4-phase diagnosis (Phase 1.7 = domain research)
+│   ├── design-philosophy.md          # 6 design principles
 │   ├── platform-adaptation.md        # 4-platform tool mapping + fallbacks
 │   ├── anti-patterns-by-domain.md    # Writing / visual / analysis / teaching
-│   ├── quality-ladder.md             # Knowledge layer diagnosis method
+│   ├── quality-ladder.md             # Knowledge layer diagnosis + research method
 │   └── se-kit-integration.md         # Optional self-evolution bundling
 └── LICENSE-apache2.0
 ```
 
-## Methodology Sources
+## Sources
 
-- **[ljg-skills](https://github.com/lijigang/ljg-skills)** — 14 skills that prioritize quality floors over feature ceilings. Constraint-driven design, stance over role, domain anti-pattern libraries.
-- **Human-workflow methodology** — Knowledge layer diagnosis, case asset libraries, constraint tightening gradients, defect-layer repair ordering. From a 66-brand design system improvement (199 files, 19,209 lines, ~45 minutes with parallel agents).
-- **[Anthropic skill-creator](https://github.com/anthropics/claude-code)** (Apache 2.0) — 6-step creation process, progressive disclosure, SKILL.md format conventions.
+- **[ljg-skills](https://github.com/lijigang/ljg-skills)** — Constraint-driven design, stance over role, domain anti-pattern libraries.
+- **Human-workflow methodology** — Knowledge layer diagnosis, case asset libraries, constraint tightening. From a 66-brand design system improvement (199 files, ~45 min with parallel agents).
+- **[Anthropic skill-creator](https://github.com/anthropics/claude-code)** (Apache 2.0) — Progressive disclosure, SKILL.md conventions.
 
 ## License
 
-Apache 2.0 — derived from Anthropic's skill-creator. See [LICENSE-apache2.0](LICENSE-apache2.0).
+Apache 2.0. See [LICENSE-apache2.0](LICENSE-apache2.0).
