@@ -17,11 +17,11 @@ Complete workflow for diagnosing and improving an existing agent skill. Takes a 
 Load Layer 3 references one at a time per phase, not all at once:
 - Phase 1.2 → load `quality-ladder.md`, release after diagnosis
 - Phase 1.5 → load `platform-adaptation.md`, release after check
+- Phase 1.6 → load `se-kit-integration.md` if self-evolution is relevant, release after
 - Phase 2.1 → load `anti-patterns-by-domain.md` for red-line design
-- Phase 2.3 → load `quality-ladder.md` again for upgrade path
-- Phase 1.6 / 2.3 → load `se-kit-integration.md` if self-evolution is relevant
+- Phase 2.3 → load `quality-ladder.md` for upgrade path, release, then load `se-kit-integration.md` if needed
 
-This keeps simultaneous context under 2500 words (boost-workflow + one reference).
+Always release one reference before loading the next. This keeps simultaneous context under 2500 words (boost-workflow + one reference at a time).
 
 ---
 
@@ -89,17 +89,6 @@ For analysis/decision-type skills:
 
 **Output**: Observability gap assessment (if applicable).
 
-### 1.6 Self-Evolution Audit (Optional)
-
-Check if the skill would benefit from runtime self-evolution:
-
-1. **Already integrated?** Look for `se-kit/` directory and `se-workspace/` in the skill
-2. **If integrated**: Check `se-kit/SKILL.md` version against latest skill-se-kit release. If outdated, flag for upgrade in Phase 2
-3. **If not integrated**: Assess whether the skill type benefits from learning (analysis/creative → yes, tool/transformation → usually no)
-4. **If integrated and has data**: Review `se-workspace/skill_bank.json` — are accumulated skills being used? Is the experience log growing?
-
-**Output**: Self-evolution status (not integrated / integrated + current / integrated + outdated / integrated + underused) with recommendation.
-
 ### 1.5 Cross-Platform Compatibility Check
 
 Scan all skill files for:
@@ -108,6 +97,18 @@ Scan all skill files for:
 - Features requiring capabilities not available on all target platforms (e.g., sub-agent dispatch)
 
 **Output**: Platform compatibility issues list.
+
+### 1.6 Self-Evolution Audit (Optional)
+
+Check if the skill would benefit from runtime self-evolution:
+
+1. **Already integrated?** Look for `se-kit/` directory and `se-workspace/` in the skill
+2. **If integrated**: Check `se-kit/SKILL.md` version against latest skill-se-kit release. If outdated, flag for upgrade in Phase 2
+3. **If not integrated**: Assess whether the skill type benefits from learning (analysis/creative → yes, tool/transformation → usually no)
+4. **If integrated and has data**: Review `se-workspace/skill_bank.json` — are accumulated skills being used? Is the experience log growing?
+5. **Token budget check**: For skills targeting platforms without sub-agent support, the se-kit protocol adds ~3400 words to main session context. Factor this into the context efficiency assessment (Phase 1.3). If total always-loaded context would exceed 5000 words, weigh whether self-evolution is worth the cost.
+
+**Output**: Self-evolution status (not integrated / integrated + current / integrated + outdated / integrated + underused) with recommendation.
 
 ---
 

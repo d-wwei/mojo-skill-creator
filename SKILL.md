@@ -27,7 +27,7 @@ If neither specified, ask which path.
 5. **Atomic + composable** — One skill, one job. Complex tasks = composition
 6. **4-layer token architecture** — Metadata (~100w) → Router (≤500w) → Workflow (≤2000w) → Reference (on-demand)
 
-Full treatment: `references/design-philosophy.md` (~800w)
+Full treatment: `references/design-philosophy.md` (~900w)
 
 ## Red Lines
 
@@ -50,10 +50,10 @@ Full treatment: `references/design-philosophy.md` (~800w)
 
 | File | Content | Load When |
 |------|---------|-----------|
-| `references/new-workflow.md` (~1500w) | `new` workflow (9 steps) | User invokes `new` |
+| `references/new-workflow.md` (~1500w) | `new` workflow (8 steps + optional 6b) | User invokes `new` |
 | `references/boost-workflow.md` (~1400w) | `boost` workflow (4 phases) | User invokes `boost` |
-| `references/design-philosophy.md` (~800w) | 6 design principles with examples | Designing red lines, stance, structure |
-| `references/platform-adaptation.md` (~800w) | 4-platform tool mapping + fallbacks | Cross-platform decisions |
+| `references/design-philosophy.md` (~900w) | 6 design principles with examples | Designing red lines, stance, structure |
+| `references/platform-adaptation.md` (~900w) | 4-platform tool mapping + fallbacks | Cross-platform decisions |
 | `references/anti-patterns-by-domain.md` (~750w) | Domain failure pattern checklists | Designing domain red lines |
 | `references/quality-ladder.md` (~960w) | Knowledge layer diagnosis + case methodology | `boost` diagnosis |
 | `references/se-kit-integration.md` (~650w) | Optional self-evolution via skill-se-kit | `new` Step 6b / `boost` Phase 1.6 |

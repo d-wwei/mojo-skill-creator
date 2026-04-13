@@ -4,7 +4,7 @@ Six principles for designing high-quality agent skills. Each principle applies r
 
 ---
 
-## 0. Distribution-First (分发优先)
+## 1. Distribution-First (分发优先)
 
 ### Principle
 
@@ -22,7 +22,7 @@ Ask: "If someone downloads this skill package onto a fresh machine with only the
 
 ---
 
-## 1. Constraints Before Guidance (红线优先)
+## 2. Constraints Before Guidance (红线优先)
 
 ### Principle
 
@@ -48,7 +48,7 @@ Good constraint: "No sentence may contain more than one subordinate clause. Viol
 
 ---
 
-## 2. Acceptance Criteria Upfront (验收前置)
+## 3. Acceptance Criteria Upfront (验收前置)
 
 ### Principle
 
@@ -74,7 +74,7 @@ Bad:
 
 ---
 
-## 3. Stance Over Role (姿态替代角色)
+## 4. Stance Over Role (姿态替代角色)
 
 ### Principle
 
@@ -103,7 +103,7 @@ Stance is one order of magnitude more precise than role.
 
 ---
 
-## 4. Domain Anti-Pattern Libraries (反模式驱动)
+## 5. Domain Anti-Pattern Libraries (反模式驱动)
 
 ### Principle
 
@@ -120,7 +120,7 @@ Reference the domain-specific anti-pattern library from `anti-patterns-by-domain
 
 ---
 
-## 5. Atomic + Composable (原子化 + 可组合)
+## 6. Atomic + Composable (原子化 + 可组合)
 
 ### Principle
 

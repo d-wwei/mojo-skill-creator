@@ -49,7 +49,7 @@ my-skill/
 
 Copy from the skill-se-kit source into `se-kit/`:
 - `SKILL.md` (protocol specification)
-- `schemas/` directory (all 6 JSON schema files)
+- `schemas/` directory (copy the entire directory)
 
 Do NOT copy docs/, examples/, tools/, or README files — those are for skill authors, not end users.
 
