@@ -50,8 +50,8 @@ Full treatment: `references/design-philosophy.md` (~900w)
 
 | File | Content | Load When |
 |------|---------|-----------|
-| `references/new-workflow.md` (~1500w) | `new` workflow (8 steps + optional 6b) | User invokes `new` |
-| `references/boost-workflow.md` (~1400w) | `boost` workflow (4 phases) | User invokes `boost` |
+| `references/new-workflow.md` (~2000w) | `new` workflow (9 steps + optional 7b) | User invokes `new` |
+| `references/boost-workflow.md` (~1800w) | `boost` workflow (4 phases incl. domain research) | User invokes `boost` |
 | `references/design-philosophy.md` (~900w) | 6 design principles with examples | Designing red lines, stance, structure |
 | `references/platform-adaptation.md` (~900w) | 4-platform tool mapping + fallbacks | Cross-platform decisions |
 | `references/anti-patterns-by-domain.md` (~750w) | Domain failure pattern checklists | Designing domain red lines |

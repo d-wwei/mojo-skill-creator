@@ -36,13 +36,67 @@ There is a clear sense of: input types, output types, success criteria, and fail
 
 ---
 
-## Step 2: Design Red Lines and Acceptance Criteria
+## Step 2: Research Domain Best Practices
 
-**Goal**: Define the quality floor BEFORE defining the workflow.
+**Goal**: Study how the best humans do the task this skill automates. Their workflows, principles, and standards become the skill's foundation.
 
-This is the most important step. Red lines and acceptance criteria are the skill's immune system.
+Do NOT skip this step. A skill designed from abstract principles produces generic output. A skill designed from real expert workflows produces output with the depth and specificity that only domain experience can provide.
 
-### 2a. Red Lines (5-10 items)
+### 2a. Identify the Domain
+
+From Step 1's examples, name the real-world discipline this skill maps to. Examples:
+- A writing skill → professional writing / journalism / copywriting
+- A design skill → product design / visual design / UX design
+- An analysis skill → research methodology / financial analysis / competitive intelligence
+- A code review skill → software engineering best practices
+
+### 2b. Find the Best Practitioners
+
+Search for how the best people and teams in this domain actually work:
+
+1. **Who are the recognized leaders?** (Individuals, companies, teams with proven track records)
+2. **What are their published workflows?** (Blog posts, conference talks, books, interviews where they share their actual process — not marketing, but real operational detail)
+3. **What frameworks does the industry use?** (Established methodologies, standards, certification bodies)
+4. **What do they consider non-negotiable?** (Quality standards that top practitioners never compromise on)
+
+### 2c. Extract Workflow, Principles, and Standards
+
+From the research, extract three things:
+
+1. **Workflow**: What phases do experts go through? In what order? What are the decision points and checkpoints? Where do they explore vs. commit?
+2. **Principles**: What do they believe about quality? What trade-offs do they make? What do they prioritize when resources are constrained?
+3. **Standards**: What are their quality bars? What makes output "good enough" vs. "actually good"? What do they reject?
+
+### 2d. Cross-Disciplinary Scan (Optional)
+
+Ask: Does the structure of this task exist in another field? If so, what tools did that field build for it?
+
+Examples from practice:
+- Design skill → Apple's "Creative Selection" (natural selection analogy — generate many variants, let the best survive)
+- Analysis skill → scientific method (hypothesis → experiment → evidence, not conclusion → justification)
+- Writing skill → journalism (inverted pyramid, fact-checking protocols)
+
+### 2e. Map to Skill Design
+
+Translate research findings into skill design inputs:
+
+| Research Finding | Maps To |
+|-----------------|---------|
+| Expert workflow phases | Skill's workflow steps (Step 5) |
+| Expert quality standards | Red lines and acceptance criteria (Step 3) |
+| Expert principles | Skill's stance (Step 3c) |
+| Expert anti-patterns ("never do X") | Domain-specific red lines (Step 3a) |
+| Cross-disciplinary insights | Novel workflow steps or quality checks |
+
+**Output**: A research summary documenting: domain leaders studied, key workflow insights, quality standards discovered, and how each maps to the skill being built.
+
+---
+
+## Step 3: Design Red Lines and Acceptance Criteria
+
+**Goal**: Define the quality floor BEFORE defining the workflow. Source red lines from the domain research in Step 2, not from abstract principles alone.
+
+### 3a. Red Lines (5-10 items)
 
 List what the skill MUST NOT produce. Each red line must be mechanically checkable.
 
@@ -51,20 +105,21 @@ List what the skill MUST NOT produce. Each red line must be mechanically checkab
 - [ ] [Specific failure pattern]. Check: [how to detect it].
 ```
 
-**Sources for red lines**:
-- Domain anti-patterns (consult `anti-patterns-by-domain.md` for the relevant domain)
-- Known failure modes from Step 1's failure cases
-- Platform constraints (consult `platform-adaptation.md` if relevant)
+**Sources for red lines** (in priority order):
+1. Expert quality standards from Step 2 (most valuable — comes from practitioners who've seen thousands of failure modes)
+2. Domain anti-patterns (consult `anti-patterns-by-domain.md` for the relevant domain)
+3. Known failure modes from Step 1's failure cases
+4. Platform constraints (consult `platform-adaptation.md` if relevant)
 
-### 2b. Acceptance Criteria (3-5 items)
+### 3b. Acceptance Criteria (3-5 items)
 
-List testable quality standards from the user's perspective.
+List testable quality standards from the user's perspective. Informed by the quality bars discovered in Step 2.
 
 **Quality test**: For each criterion, ask: "Can someone verify this without domain expertise?" If no, make it more concrete.
 
-### 2c. Stance (not role)
+### 3c. Stance (not role)
 
-Define the cognitive position, not an identity.
+Define the cognitive position, not an identity. The stance should reflect the expert mindset discovered in Step 2 — how do the best practitioners think about this domain?
 
 **Template**: "[What the skill does, expressed as a relationship to the problem]. [What it explicitly does NOT do]."
 
@@ -72,7 +127,7 @@ Consult `design-philosophy.md` § Stance Over Role for examples.
 
 ---
 
-## Step 3: Plan the Skill's Token Architecture
+## Step 4: Plan the Skill's Token Architecture
 
 **Goal**: Design the 4-layer structure before writing any content.
 
@@ -101,7 +156,7 @@ In SKILL.md, annotate each reference pointer with estimated token cost:
 
 ---
 
-## Step 4: Plan Reusable Resources
+## Step 5: Plan Reusable Resources
 
 **Goal**: Identify what scripts, references, and assets the skill needs.
 
@@ -119,9 +174,9 @@ After listing resources, check:
 
 ---
 
-## Step 5: Create the Skill
+## Step 6: Create the Skill
 
-### 5a. Directory Structure
+### 6a. Directory Structure
 
 ```
 skill-name/
@@ -135,7 +190,7 @@ skill-name/
 
 Create only the directories actually needed. An empty `scripts/` wastes attention.
 
-### 5b. Write SKILL.md (Layer 1 Router)
+### 6b. Write SKILL.md (Layer 1 Router)
 
 **Frontmatter**:
 ```yaml
@@ -176,22 +231,24 @@ description: This skill should be used when the user asks to "phrase 1", "phrase
 
 **Writing style**: Imperative/infinitive form. "Read the input" not "You should read the input."
 
-### 5c. Write Workflow References (Layer 2)
+### 6c. Write Workflow References (Layer 2)
 
 Each workflow file is self-contained for its path. Target ≤ 2000 words.
 
+The workflow structure should mirror the expert workflow discovered in Step 2. Do not invent a workflow from abstract principles — encode what the best practitioners actually do.
+
 Include:
-- Step-by-step process with clear input/output per step
+- Step-by-step process with clear input/output per step (mapped from expert workflow phases)
 - Which red lines to check at which step
 - Pointers to Layer 3 references when deeper knowledge is needed
 
-### 5d. Write Deep References (Layer 3)
+### 6d. Write Deep References (Layer 3)
 
 Only if needed. These are loaded on-demand by the agent, never automatically.
 
 ---
 
-## Step 6: Human Observability (Optional)
+## Step 7: Human Observability (Optional)
 
 **Decision point**: Does this skill's execution process need to be auditable by humans?
 
@@ -221,7 +278,7 @@ After completing the workflow, write a summary document to `docs/{skill-name}/{d
 
 ---
 
-## Step 6b: Self-Evolution Integration (Optional)
+## Step 7b: Self-Evolution Integration (Optional)
 
 **Decision point**: Should this skill learn and improve from its own usage over time?
 
@@ -252,7 +309,7 @@ The skill-se-kit is bundled INTO the distributed skill package (inside `se-kit/`
 
 ---
 
-## Step 7: Cross-Platform Validation
+## Step 8: Cross-Platform Validation
 
 Before declaring the skill complete, verify:
 
@@ -267,7 +324,7 @@ Before declaring the skill complete, verify:
 
 ---
 
-## Step 8: Iterate
+## Step 9: Iterate
 
 After first use, observe:
 - Did the agent trigger the skill on the right requests? (If not, refine description)

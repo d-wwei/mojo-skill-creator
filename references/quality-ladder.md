@@ -1,6 +1,8 @@
 # Quality Ladder
 
-How to diagnose a skill's current quality level and systematically raise it. Derived from the methodology of improving AI skills by mapping human expert workflows.
+How to diagnose a skill's current quality level and systematically raise it.
+
+The core methodology: **before improving a skill, study how the best humans do the task the skill automates.** Expert workflows become the skill's workflow. Expert standards become the skill's red lines. This is not abstract theory — it's the actual process that produced measurable quality improvements in practice (e.g., 66-brand design system: specificity test pass rate from ~20% to ~85%).
 
 ---
 
@@ -31,6 +33,28 @@ Every skill operates at one of three knowledge layers. Diagnosis determines wher
 **Skill behavior**: Output has clear identity. The skill can detect errors: "This is wrong because the real [reference] would never do this."
 
 **Diagnostic test**: Produce output in a specific reference style, then deliberately introduce an error. If the skill auto-detects and corrects it, it is at Layer 3.
+
+---
+
+## Domain Best Practice Research (The Foundation)
+
+Every quality upgrade starts here. Before touching the skill's content, answer:
+
+1. **What task does this skill automate?** Name the real-world discipline.
+2. **Who does this best?** Find 3-5 recognized leaders (people, companies, teams).
+3. **What is their workflow?** Not their marketing — their actual operational process. Look for:
+   - Conference talks where practitioners describe their real process
+   - Blog posts with "how we actually do X" specifics
+   - Books by practitioners (not consultants)
+   - Interviews where they share failures and lessons
+4. **What are their quality standards?** What do they reject? What's non-negotiable?
+5. **What would they think of this skill's output?** The gap between "what experts produce" and "what this skill produces" is the upgrade target.
+
+### Example: Improving a Design Skill
+
+Research found: Apple uses "Creative Selection" (500 prototypes for one package), Linear treats design as "search, not production", Stripe uses three-layer quality (Utility + Usability + Beauty), Airbnb does physical side-by-side audits.
+
+This led to: adding an exploration phase before commitment, generating multiple directions for comparison (not one "best guess"), and a three-layer quality check at delivery. None of these came from abstract design principles — they came from studying what the best teams actually do.
 
 ---
 

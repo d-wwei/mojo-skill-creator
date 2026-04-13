@@ -18,6 +18,7 @@ Load Layer 3 references one at a time per phase, not all at once:
 - Phase 1.2 → load `quality-ladder.md`, release after diagnosis
 - Phase 1.5 → load `platform-adaptation.md`, release after check
 - Phase 1.6 → load `se-kit-integration.md` if self-evolution is relevant, release after
+- Phase 1.7 → no reference needed (uses web search / file reading for domain research)
 - Phase 2.1 → load `anti-patterns-by-domain.md` for red-line design
 - Phase 2.3 → load `quality-ladder.md` for upgrade path, release, then load `se-kit-integration.md` if needed
 
@@ -110,6 +111,26 @@ Check if the skill would benefit from runtime self-evolution:
 
 **Output**: Self-evolution status (not integrated / integrated + current / integrated + outdated / integrated + underused) with recommendation.
 
+### 1.7 Domain Best Practice Research
+
+**This is the highest-leverage diagnostic step.** Before prescribing any content upgrade, study how the best humans do the task this skill automates.
+
+1. **Identify the domain**: What real-world discipline does this skill map to?
+2. **Search for current best practices**:
+   - Who are the recognized leaders in this domain? (People, companies, teams)
+   - What workflows do they use? (Published processes, conference talks, books, interviews)
+   - What quality standards do they consider non-negotiable?
+   - What has changed recently? (New tools, new methodologies, shifts in the field)
+3. **Compare the skill's workflow to expert workflow**:
+   - Map the skill's current steps against expert workflow phases
+   - Identify missing phases (e.g., experts have an "exploration" phase that the skill skips)
+   - Identify mismatched emphasis (e.g., experts spend 40% of time on research, skill spends 5%)
+4. **Cross-disciplinary scan**: Does the structure of this task exist in another field? What tools did that field build?
+
+**Output**: Research summary with: domain leaders studied, expert workflow mapping, gaps between skill and expert workflow, quality standards discovered, cross-disciplinary insights.
+
+This output directly feeds Phase 2.3 (Content Upgrades) — expert workflows become the skill's upgraded workflow, expert standards become new red lines.
+
 ---
 
 ## Phase 2: Prescription
@@ -139,21 +160,31 @@ Same error × many locations. Fix before content rewrite.
 | Inconsistent terminology | Find-and-replace to standardize |
 | Second-person writing style | Replace "you should" with imperative form |
 
-### 2.3 Content Upgrades (based on knowledge layer)
+### 2.3 Content Upgrades (based on knowledge layer + domain research)
+
+**Workflow Redesign** (from Phase 1.7 research):
+
+If the domain research revealed a significant gap between the skill's workflow and expert workflow, the workflow itself needs restructuring — not just content polishing. This is the highest-impact upgrade:
+
+1. Map the expert workflow phases to the skill's workflow steps
+2. Add missing phases (e.g., experts have "exploration before commitment" — add it)
+3. Adjust phase emphasis (e.g., experts spend most time on research — increase the skill's research step)
+4. Incorporate expert quality standards as new red lines
+5. Update the skill's stance to reflect the expert mindset discovered in research
 
 **Layer 1 → Layer 2 upgrade** (add patterns):
 
 1. Identify the 3-5 most common scenario types the skill handles
-2. For each scenario type, document:
+2. For each scenario type, document (informed by expert practice from Phase 1.7):
    - Structural pattern (what the output typically looks like)
    - Key parameters that distinguish this scenario
-   - Common pitfalls specific to this scenario
+   - Common pitfalls specific to this scenario (especially those mentioned by domain experts)
 3. Add scenario detection to the workflow: "Identify which scenario type applies before proceeding"
 
 **Layer 2 → Layer 3 upgrade** (add cases):
 
 1. Build a case asset library (consult `quality-ladder.md` for methodology):
-   - Start with 3-5 benchmark cases (hand-crafted, extremely detailed)
+   - Start with 3-5 benchmark cases from the domain leaders identified in Phase 1.7
    - Add 10-15 working-level cases (well-researched)
 2. Each case must cover four dimensions: parameters, operation guide, quality floor, intuition check
 3. Apply the specificity test: remove the case name — can someone still identify it?
@@ -220,6 +251,7 @@ After completing all fixes, generate a summary:
 - Knowledge layer: [before] → [after]
 - Token footprint: [before words] → [after words]
 - Platform compatibility issues: [N]
+- Domain research: [domain leaders studied, key workflow gaps found]
 
 ### Changes Made
 1. [Category]: [what changed and why]
