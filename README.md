@@ -13,6 +13,21 @@ Mojo Skill Creator is itself an AI agent skill (a SKILL.md with 8 reference file
 
 The output is a self-contained skill package (SKILL.md + references) that can be distributed to others and installed on any of the four supported platforms with a symlink.
 
+## What Problem It Solves
+
+Writing a SKILL.md is easy. Writing one that produces good output is not.
+
+The typical failure: a skill passes every structural check — frontmatter, directory layout, trigger phrases — but its output is generic. Run it on two different tasks, and you get two sets of words over the same skeleton. The skill is technically correct and practically mediocre.
+
+This happens because most skills are designed from the author's intuition or from abstract best practices, without studying how domain experts actually do the work. A writing skill that doesn't encode how professional writers work will produce AI-flavored writing. A design skill that skips how the best design teams operate will produce safe, average layouts.
+
+Mojo addresses this with a specific structural choice: **before designing any red line or workflow step, the creator researches how the best practitioners in the target domain actually work** — their real workflows, quality standards, and non-negotiables. Expert workflows become the skill's workflow. Expert standards become the skill's red lines. This is the difference between a skill assembled from generic building blocks and one informed by domain expertise.
+
+Beyond methodology, it also handles the engineering that makes skills practical:
+- **Cross-platform** — no platform-specific tool names, works on all four agent platforms
+- **Token-efficient** — 4-layer architecture so only the relevant workflow loads per invocation
+- **Distribution-ready** — self-contained packages that end users install with a symlink, no setup needed
+
 ## How `new` Works
 
 The 9 steps, in order:
