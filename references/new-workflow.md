@@ -15,6 +15,26 @@ Before starting, have ready:
 
 ---
 
+## Step Artifacts (Mandatory)
+
+Each step writes its output to the target skill's `build/` directory. All artifacts must exist before declaring the skill complete.
+
+| Step | Artifact | Gate Condition |
+|------|----------|----------------|
+| 1 | `build/examples.md` | 3-5 concrete examples with input/output/failure cases |
+| 2 | `build/domain-research.md` | ≥ 5 source entries (per Research Minimums) + research synthesis |
+| 3 | `build/red-lines-and-criteria.md` | ≥ 5 red lines + ≥ 3 acceptance criteria + stance definition |
+| 4 | `build/token-architecture.md` | Layer budget table + sub-command decisions + token declarations |
+| 5 | `build/resource-plan.md` | Planned scripts/, references/, assets/ with justification |
+| 6 | (skill files themselves) | SKILL.md + references/ exist per plan |
+| 7/7b | (optional — no artifact) | — |
+| 8 | `build/validation-checklist.md` | 8-item validation with pass/fail per item |
+| 9 | (no artifact — iteration feeds back) | — |
+
+**Step Gate Rule**: Do NOT proceed to Step N+1 until Step N's artifact exists and meets its gate condition.
+
+---
+
 ## Step 1: Understand the Skill with Concrete Examples
 
 **Goal**: Build a clear picture of how the skill will be used in practice.
@@ -33,6 +53,8 @@ Do NOT skip this step. Even when the skill seems obvious, concrete examples surf
 ### Conclude When
 
 There is a clear sense of: input types, output types, success criteria, and failure modes.
+
+**Artifact**: Write output to `build/examples.md`.
 
 ---
 
@@ -59,6 +81,8 @@ Follow the complete research process in `domain-research-guide.md`. The guide co
 ### Conclude When
 
 A research synthesis document exists with: domain leaders studied, revised workflow design, quality standards, red line candidates, and open questions.
+
+**Artifact**: Write output to `build/domain-research.md`. Must meet Research Minimums in `domain-research-guide.md`.
 
 ---
 
@@ -95,6 +119,8 @@ Define the cognitive position, not an identity. The stance should reflect the ex
 
 Consult `design-philosophy.md` § Stance Over Role for examples.
 
+**Artifact**: Write red lines, acceptance criteria, and stance to `build/red-lines-and-criteria.md`.
+
 ---
 
 ## Step 4: Plan the Skill's Token Architecture
@@ -124,6 +150,8 @@ In SKILL.md, annotate each reference pointer with estimated token cost:
 - `references/advanced.md` (~2000 words) — loaded only for complex cases
 ```
 
+**Artifact**: Write layer budget and decisions to `build/token-architecture.md`.
+
 ---
 
 ## Step 5: Plan Reusable Resources
@@ -141,6 +169,8 @@ After listing resources, check:
 - Does each resource justify its existence? (Will it be used in ≥ 2 scenarios?)
 - Is any resource duplicating knowledge that already exists in the agent's base capabilities?
 - Can any resource be a script (executed, not loaded) instead of a reference (loaded into context)?
+
+**Artifact**: Write resource plan to `build/resource-plan.md`.
 
 ---
 
@@ -291,6 +321,22 @@ Before declaring the skill complete, verify:
 6. **Acceptance criteria are testable** — each can be verified by a specific action
 7. **Stance is defined** — not a role/identity
 8. **Symlink test**: Skill can be symlinked into any platform's discovery path and loaded
+
+**Artifact**: Write validation results to `build/validation-checklist.md`.
+
+### Completion Gate
+
+Before declaring the new skill complete, verify ALL mandatory artifacts exist in `build/`:
+
+- [ ] `build/examples.md` — 3-5 examples with input/output/failure
+- [ ] `build/domain-research.md` — ≥ 5 sources + synthesis
+- [ ] `build/red-lines-and-criteria.md` — ≥ 5 red lines + ≥ 3 criteria + stance
+- [ ] `build/token-architecture.md` — layer budget + declarations
+- [ ] `build/resource-plan.md` — resource list with justifications
+- [ ] `build/validation-checklist.md` — 8-item checklist, all pass
+- [ ] Skill's SKILL.md traces its red lines, stance, and workflow back to `build/domain-research.md`
+
+Missing artifacts = skill is not complete. Do not proceed to iteration until this gate passes.
 
 ---
 
