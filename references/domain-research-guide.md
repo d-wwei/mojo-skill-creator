@@ -96,6 +96,28 @@ Produce a single document capturing:
 
 This synthesis feeds directly into red line design, acceptance criteria, and skill workflow creation. The workflow designed here becomes the workflow encoded in the skill.
 
+## Research Minimums
+
+These thresholds are mechanically checkable (enforced by red line in SKILL.md).
+
+**Source count**: ≥ 5 independent sources. "Independent" means different authors, organizations, or projects. Five links from the same blog do not count as 5 sources.
+
+**Source record format** (per source):
+
+| Field | Required | Purpose |
+|-------|----------|---------|
+| Source name + URL/reference | Yes | Traceability |
+| Key finding (1-2 sentences) | Yes | What this source reveals about expert practice |
+| Implication for this skill (1 sentence) | Yes | How this finding should influence the skill's design |
+
+**Expert workflow mapping**: At least one source must provide a detailed enough workflow to produce a step-by-step comparison table:
+
+| Expert Phase | Skill Step | Gap |
+|-------------|-----------|-----|
+| ... | ... | ... |
+
+**"No significant gap" claim**: If concluding that the skill's workflow already matches expert practice, the research artifact must cite the specific expert workflow that validates this conclusion, with the mapping table showing alignment. A bare assertion of "no gaps found" without this evidence violates the research minimum red line.
+
 ---
 
 ## For `boost`: Comparative Analysis
