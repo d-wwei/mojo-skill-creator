@@ -38,6 +38,8 @@ Full treatment: `references/design-philosophy.md` (~900w)
 - No red line that cannot be checked by scanning output
 - No workflow file exceeding 2000 words without phase-gated loading
 - No assumption that end users have pre-installed tools or global packages — distributed skills work out of the box
+- No phase/step completed without its mandatory artifact written to the target skill's diagnosis/ (boost) or build/ (new) directory. Check: artifact file exists at declared path before proceeding to next phase/step
+- No domain research step completed with fewer than 5 independent sources studied and documented. Check: research artifact contains ≥ 5 source entries each with name, key finding, and implication for the skill
 
 ## Acceptance
 
