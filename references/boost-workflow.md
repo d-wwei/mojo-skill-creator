@@ -29,6 +29,21 @@ Always release one reference before loading the next. This keeps simultaneous co
 
 ## Phase 1: Diagnosis
 
+### Phase 1 Artifacts (Mandatory)
+
+Each diagnosis step writes its findings to the target skill's `diagnosis/` directory. All artifacts must exist before proceeding to Phase 2.
+
+| Step | Artifact | Gate Condition |
+|------|----------|----------------|
+| 1.1 | `diagnosis/structural-audit.md` | 7-item check table with pass/fail per item |
+| 1.2 | `diagnosis/layer-diagnosis.md` | Layer number (1/2/3) with test evidence |
+| 1.3 | `diagnosis/token-audit.md` | Word counts: SKILL.md body, always-loaded total, each reference |
+| 1.4 | (optional — no artifact) | — |
+| 1.5 | `diagnosis/platform-check.md` | Platform-specific terms found, or "none found" with search method |
+| 1.6 | (optional — no artifact) | — |
+| 1.7 | `diagnosis/domain-research.md` | ≥ 5 source entries + expert-vs-skill workflow mapping table |
+| 1.8 | `diagnosis/synthesis.md` | Cross-references ALL prior artifacts. Answers 3 rethinking questions with evidence. |
+
 ### 1.1 Structural Audit
 
 Read the skill's full directory and check:
@@ -44,6 +59,7 @@ Read the skill's full directory and check:
 | Writing style: imperative form | No "you should" / "you need to" | Mechanical |
 
 **Output**: List of structural defects with type classification.
+**Artifact**: Write output to `diagnosis/structural-audit.md`.
 
 ### 1.2 Knowledge Layer Diagnosis
 
@@ -62,6 +78,7 @@ Produce output in a reference style, then introduce a deliberate error.
 - If the skill auto-detects and corrects → **Layer 3**
 
 **Output**: Current layer (1, 2, or 3) with evidence.
+**Artifact**: Write output to `diagnosis/layer-diagnosis.md`.
 
 ### 1.3 Context Efficiency Audit
 
@@ -81,6 +98,7 @@ Measure the skill's token footprint:
 | Layer 1 (router) content | ≤ 500 words | > 500 words |
 
 **Output**: Token metrics and compression opportunities.
+**Artifact**: Write output to `diagnosis/token-audit.md`.
 
 ### 1.4 Human Observability Audit (Optional)
 
@@ -99,6 +117,7 @@ Scan all skill files for:
 - Features requiring capabilities not available on all target platforms (e.g., sub-agent dispatch)
 
 **Output**: Platform compatibility issues list.
+**Artifact**: Write output to `diagnosis/platform-check.md`.
 
 ### 1.6 Self-Evolution Audit (Optional)
 
@@ -122,6 +141,7 @@ Check if the skill would benefit from runtime self-evolution:
 4. Cross-disciplinary scan for structural insights
 
 **Output**: Research summary with expert workflow mapping and gaps.
+**Artifact**: Write output to `diagnosis/domain-research.md`. Must contain ≥ 5 source entries per Research Minimums in `domain-research-guide.md`.
 
 ### 1.8 Research Synthesis
 
@@ -132,6 +152,20 @@ After all diagnostic steps (1.1–1.7), synthesize before prescribing. Follow th
 3. **What does the quality bar actually look like?** Combine knowledge layer diagnosis (1.2) with expert standards (1.7).
 
 **Output**: Integrated diagnosis — determines whether Phase 2 prescribes surface fixes or fundamental redesign.
+**Artifact**: Write output to `diagnosis/synthesis.md`. Must reference findings from ALL prior diagnosis artifacts by filename.
+
+### Phase 1 Exit Gate
+
+Before proceeding to Phase 2, verify ALL mandatory artifacts exist in `diagnosis/`:
+
+- [ ] `diagnosis/structural-audit.md` — contains 7-item check table
+- [ ] `diagnosis/layer-diagnosis.md` — states layer with evidence
+- [ ] `diagnosis/token-audit.md` — contains word count metrics
+- [ ] `diagnosis/platform-check.md` — lists issues or confirms clean
+- [ ] `diagnosis/domain-research.md` — contains ≥ 5 sources + workflow mapping
+- [ ] `diagnosis/synthesis.md` — cross-references all artifacts, answers 3 rethinking questions
+
+Do NOT proceed to Phase 2 until every checkbox above can be checked. Missing artifacts = incomplete diagnosis.
 
 ---
 
@@ -140,6 +174,18 @@ After all diagnostic steps (1.1–1.7), synthesize before prescribing. Follow th
 Based on the integrated diagnosis from Phase 1.8, generate a targeted improvement plan. If the synthesis concluded that a structural redesign is needed, the prescription starts there — not with surface fixes.
 
 Defects are addressed in strict order: Architecture → Mechanical → Content.
+
+### Phase 2 Artifacts
+
+Phase 2 does not create new files. It appends prescription sections to `diagnosis/synthesis.md`.
+
+| Step | Section Added to synthesis.md | Gate Condition |
+|------|-------------------------------|----------------|
+| 2.1 | `## Architecture Prescription` | Lists each defect from structural-audit.md with planned fix |
+| 2.2 | `## Mechanical Prescription` | Lists each issue from platform-check.md with planned fix |
+| 2.3 | `## Content Prescription` | CANNOT be empty — see gate rule below |
+
+**Phase 2.3 Anti-Skip Rule**: Section 2.3 Content Prescription CANNOT be a bare dismissal. If no content upgrades are prescribed, this section must contain ALL of: (a) the specific expert workflow from 1.7 that validates the current skill workflow, (b) an explicit claim that the current knowledge layer is appropriate with evidence from 1.2, (c) a token efficiency assessment from 1.3 confirming no compression opportunities. Omitting this evidence is a red line violation.
 
 ### 2.1 Architecture Fixes (if any)
 
@@ -153,6 +199,8 @@ These block everything else. Fix first.
 | Missing layer structure | Restructure: thin SKILL.md router + references/ for workflows |
 | Token budget violation | Move content from SKILL.md to references/ |
 
+**Artifact**: Append `## Architecture Prescription` to `diagnosis/synthesis.md`, listing each defect from `diagnosis/structural-audit.md` with its planned fix.
+
 ### 2.2 Mechanical Fixes (if any)
 
 Same error × many locations. Fix before content rewrite.
@@ -163,6 +211,8 @@ Same error × many locations. Fix before content rewrite.
 | Broken cross-references | Fix paths or remove dead references |
 | Inconsistent terminology | Find-and-replace to standardize |
 | Second-person writing style | Replace "you should" with imperative form |
+
+**Artifact**: Append `## Mechanical Prescription` to `diagnosis/synthesis.md`, listing each issue from `diagnosis/platform-check.md` with its planned fix.
 
 ### 2.3 Content Upgrades (based on knowledge layer + domain research)
 
@@ -213,6 +263,18 @@ If the domain research revealed a significant gap between the skill's workflow a
 - Integrated + outdated → replace `se-kit/` contents with latest skill-se-kit release files. Per-skill data in `se-workspace/` is preserved (schemas are backward-compatible)
 - Integrated + underused → check if the self-evolution instructions in SKILL.md are clear enough for the agent to follow; strengthen if needed
 
+**Artifact**: Append `## Content Prescription` to `diagnosis/synthesis.md`. This section is subject to the Phase 2.3 Anti-Skip Rule above.
+
+### Phase 2 Exit Gate
+
+Before proceeding to Phase 3, verify `diagnosis/synthesis.md` contains ALL three prescription sections:
+
+- [ ] `## Architecture Prescription` — lists defects with planned fixes
+- [ ] `## Mechanical Prescription` — lists issues with planned fixes
+- [ ] `## Content Prescription` — substantive content (not a bare dismissal). If "no upgrades needed," must include expert workflow validation + layer evidence + token assessment.
+
+Do NOT proceed to Phase 3 until all sections are present and substantive.
+
 ---
 
 ## Phase 3: Execution
@@ -240,6 +302,15 @@ After content upgrades:
 - Re-run knowledge layer diagnosis (§1.2) — layer should have advanced
 - Re-run context efficiency audit (§1.3) — metrics should improve or hold steady
 - If case assets were added, run specificity test on each
+
+**Artifact**: After each fix category, append a verification section to `diagnosis/synthesis.md`:
+- After architecture fixes: `## Verification: Architecture` — paste re-run of §1.1 results
+- After mechanical fixes: `## Verification: Mechanical` — paste re-run of §1.5 results
+- After content upgrades: `## Verification: Content` — paste re-run of §1.2 + §1.3 results. If case assets added, paste specificity test results.
+
+### Phase 3 Exit Gate
+
+All applicable verification sections must exist in `diagnosis/synthesis.md` with actual command/check outputs. "Should pass" or "looks good" without pasted evidence is a red line violation.
 
 ---
 
@@ -271,6 +342,21 @@ After completing all fixes, generate a summary:
 - [ ] Cross-platform: clean
 - [ ] Red lines: ≥ 5, all mechanically checkable
 - [ ] Acceptance criteria: ≥ 3, all testable
+
+### Artifact Manifest
+
+Every mandatory artifact must be listed with "Present" status. Missing artifacts = report incomplete = boost not done.
+
+| Artifact | Path | Status |
+|----------|------|--------|
+| Structural Audit | diagnosis/structural-audit.md | [Present/Missing] |
+| Layer Diagnosis | diagnosis/layer-diagnosis.md | [Present/Missing] |
+| Token Audit | diagnosis/token-audit.md | [Present/Missing] |
+| Platform Check | diagnosis/platform-check.md | [Present/Missing] |
+| Domain Research | diagnosis/domain-research.md | [Present/Missing] (N sources) |
+| Synthesis | diagnosis/synthesis.md | [Present/Missing] (sections: list all) |
 ```
 
 This report serves as the human-auditable artifact for the boost process itself.
+
+**Report Gate**: The Artifact Manifest must list ALL mandatory artifacts with "Present" status. If any artifact is "Missing", the report is incomplete and the boost is not done. Do not declare completion until the manifest is fully populated.
