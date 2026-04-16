@@ -6,6 +6,17 @@ method: constraint-enforcement-guide.md § "In boost Workflow"
 
 # Mojo Skill Creator — Constraint Enforcement Analysis
 
+## Root Cause / Problem
+
+Skills produced by Mojo Skill Creator have constraints that agents routinely skip. Root cause: all enforcement was on the Think axis (cognitive instructions) with no Do axis (structural enforcement). The same problem applied to MSC itself.
+
+## Prevention
+
+1. Every new skill must include `build/constraint-enforcement-plan.md` classifying each red line as Think or Do axis (Step 3d gate)
+2. Every boosted skill gets a constraint enforcement audit (Phase 1.9 gate)
+3. MSC itself now has 3 verification scripts enforcing its own red lines structurally
+4. Design Principle 7 (Dual-Axis Constraints) makes Think+Do thinking a first-class design concern
+
 ## Red Line Classification
 
 | # | Red Line | Stakes | Mechanically Checkable? | Current Axis | Do Mechanism |

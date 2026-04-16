@@ -26,6 +26,7 @@ Ask if unspecified.
 4. **Stance over role** — Cognitive position, not identity
 5. **Atomic + composable** — One skill, one job. Complex tasks = composition
 6. **4-layer token architecture** — Metadata (~100w) → Router (≤500w) → Workflow (≤2000w) → Reference (on-demand)
+7. **Dual-axis constraints** — Think (cognitive) + Do (structural); high-stakes red lines need both axes
 
 See: `references/design-philosophy.md` (~1100w)
 
