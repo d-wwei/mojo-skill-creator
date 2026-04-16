@@ -9,14 +9,14 @@ Create and upgrade agent skills for distribution across Claude Code, Codex, Gemi
 
 ## Stance
 
-Thinks in constraints, not instructions. Designs from the end user's perspective — the person who receives the distributed skill. Defines what must not happen before what should happen.
+Thinks constraints not instructions. Designs from end-user (recipient) perspective. Defines constraints before guidance.
 
 ## Sub-Commands
 
-- **`new`**: Create from scratch → `references/new-workflow.md` (~1500w)
-- **`boost`**: Diagnose and upgrade → `references/boost-workflow.md` (~1400w)
+- **`new`**: Create from scratch → `references/new-workflow.md` (~1900w)
+- **`boost`**: Diagnose and upgrade → `references/boost-workflow.md` (~1900w)
 
-If neither specified, ask which path.
+Ask if unspecified.
 
 ## Core Design Principles
 
@@ -26,37 +26,41 @@ If neither specified, ask which path.
 4. **Stance over role** — Cognitive position, not identity
 5. **Atomic + composable** — One skill, one job. Complex tasks = composition
 6. **4-layer token architecture** — Metadata (~100w) → Router (≤500w) → Workflow (≤2000w) → Reference (on-demand)
+7. **Dual-axis constraints** — Think (cognitive) + Do (structural); high-stakes red lines need both axes
 
-Full treatment: `references/design-philosophy.md` (~900w)
+See: `references/design-philosophy.md` (~1100w)
 
 ## Red Lines
 
 - No platform-specific tool names in skill instructions (use semantic verbs)
 - No "You are an expert/senior/experienced..." role assignments
 - No SKILL.md body exceeding 2000 words without layer decomposition
-- No acceptance criterion requiring subjective judgment. Test: two independent reviewers must agree on pass/fail
-- No red line that cannot be checked by scanning output
+- No subjective acceptance criteria. Test: two reviewers must independently agree on pass/fail
+- No red line uncheckable via output scan
 - No workflow file exceeding 2000 words without phase-gated loading
 - No assumption that end users have pre-installed tools or global packages — distributed skills work out of the box
-- No phase/step completed without its mandatory artifact written to the target skill's diagnosis/ (boost) or build/ (new) directory. Check: artifact file exists at declared path before proceeding to next phase/step
-- No domain research step completed with fewer than 5 independent sources studied and documented. Check: research artifact contains ≥ 5 source entries each with name, key finding, and implication for the skill
+- No phase/step completes without mandatory artifact in diagnosis/ (boost) or build/ (new). Check: artifact exists before next step
+- No domain research completed with < 5 independent sources. Check: research artifact contains ≥ 5 entries with name, finding, and implication
+- No high-stakes red line in a produced skill left cognitive-only when structural enforcement is feasible. Check: `build/constraint-enforcement-plan.md` classifies each red line's enforcement axis
 
 ## Acceptance
 
-- Created/boosted skill deploys to any of the four target platforms without modification
-- SKILL.md contains red lines (≥5), acceptance criteria (≥3), and stance (not role)
-- Total always-loaded token cost ≤ 3000 words
-- Each design decision (red lines, stance, layer structure) is traceable to a named file or section heading
+- Deploys to 4 target platforms without modification
+- SKILL.md: ≥5 red lines, ≥3 acceptance criteria, stance (not role)
+- Always-loaded tokens ≤ 3000 words
+- Design decisions traceable to named files/headings
+- Constraint enforcement plan classifies ≥30% of red lines with Do-axis mechanisms
 
 ## References
 
 | File | Content | Load When |
 |------|---------|-----------|
-| `references/new-workflow.md` (~2000w) | `new` workflow (9 steps + optional 7b) | User invokes `new` |
-| `references/boost-workflow.md` (~1800w) | `boost` workflow (4 phases incl. domain research) | User invokes `boost` |
-| `references/design-philosophy.md` (~900w) | 6 design principles with examples | Designing red lines, stance, structure |
+| `references/new-workflow.md` (~1900w) | `new` workflow (9 steps + 3d enforcement) | User invokes `new` |
+| `references/boost-workflow.md` (~2000w) | `boost` workflow (4 phases incl. enforcement audit) | User invokes `boost` |
+| `references/design-philosophy.md` (~1100w) | 7 design principles with examples | Designing red lines, stance, structure |
+| `references/constraint-enforcement-guide.md` (~1100w) | Think/Do axis model + 4 enforcement mechanisms | `new` Step 3d / `boost` Phase 1.9 |
 | `references/platform-adaptation.md` (~900w) | 4-platform tool mapping + fallbacks | Cross-platform decisions |
 | `references/anti-patterns-by-domain.md` (~750w) | Domain failure pattern checklists | Designing domain red lines |
-| `references/domain-research-guide.md` (~800w) | How to study expert workflows + synthesize findings | `new` Step 2 / `boost` Phase 1.7-1.8 |
-| `references/quality-ladder.md` (~960w) | Knowledge layer diagnosis + case methodology | `boost` diagnosis |
+| `references/domain-research-guide.md` (~1100w) | How to study expert workflows + synthesize findings | `new` Step 2 / `boost` Phase 1.7-1.8 |
+| `references/quality-ladder.md` (~1200w) | Knowledge layer diagnosis + case methodology | `boost` diagnosis |
 | `references/se-kit-integration.md` (~650w) | Optional self-evolution via skill-se-kit | `new` Step 6b / `boost` Phase 1.6 |

@@ -1,2 +1,6 @@
 .DS_Store
 .apex/
+
+# Agent Recall data
+.assistant/
+.agent-recall/
