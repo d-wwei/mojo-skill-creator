@@ -55,7 +55,7 @@ See: `references/design-philosophy.md` (~1100w)
 
 | File | Content | Load When |
 |------|---------|-----------|
-| `references/new-workflow.md` (~1900w) | `new` workflow (9 steps + 3d enforcement) | User invokes `new` |
+| `references/new-workflow.md` (~2000w) | `new` workflow (10 steps + 3d enforcement) | User invokes `new` |
 | `references/boost-workflow.md` (~2000w) | `boost` workflow (4 phases incl. enforcement audit) | User invokes `boost` |
 | `references/design-philosophy.md` (~1100w) | 7 design principles with examples | Designing red lines, stance, structure |
 | `references/constraint-enforcement-guide.md` (~1100w) | Think/Do axis model + 4 enforcement mechanisms | `new` Step 3d / `boost` Phase 1.9 |
@@ -64,3 +64,4 @@ See: `references/design-philosophy.md` (~1100w)
 | `references/domain-research-guide.md` (~1100w) | How to study expert workflows + synthesize findings | `new` Step 2 / `boost` Phase 1.7-1.8 |
 | `references/quality-ladder.md` (~1200w) | Knowledge layer diagnosis + case methodology | `boost` diagnosis |
 | `references/se-kit-integration.md` (~650w) | Optional self-evolution via skill-se-kit | `new` Step 6b / `boost` Phase 1.6 |
+| `references/behavioral-eval-guide.md` (~900w) | Optional behavioral eval + surgical fix loop | `new` Step 10 |

@@ -30,6 +30,7 @@ Each step writes its output to the target skill's `build/` directory. All artifa
 | 7/7b | (optional — no artifact) | — |
 | 8 | `build/validation-checklist.md` | 8-item validation with pass/fail per item |
 | 9 | (no artifact — iteration feeds back) | — |
+| 10 | `build/eval-scorecard.md` + `build/eval-history.md` | Optional — see `behavioral-eval-guide.md` |
 
 **Step Gate Rule**: Do NOT proceed to Step N+1 until Step N's artifact exists and meets its gate condition.
 
@@ -262,7 +263,7 @@ Before declaring the skill complete, verify:
 1. **No platform-specific tool names** in SKILL.md or workflow references
 2. **All referenced files exist** at the declared paths
 3. **Frontmatter** has `name` and `description` fields
-4. **SKILL.md word count** ≤ target (500 for router, 2000 for single-file skills)
+4. **SKILL.md word count** ≤ target (1000 for router, 2000 for single-file skills)
 5. **Red lines are mechanically checkable** — each has a detection method
 6. **Acceptance criteria are testable** — each can be verified by a specific action
 7. **Stance is defined** — not a role/identity
@@ -302,3 +303,13 @@ After first use, observe:
 - Was the token budget respected? (If not, move content to deeper layers)
 
 Feed observations back into Steps 2-5. Each iteration should either tighten a red line, clarify a workflow step, or compress a token-heavy section.
+
+---
+
+## Step 10: Behavioral Eval & Surgical Fix (Optional)
+
+**Decision point**: Does this skill's output have subjective quality dimensions not verifiable by scripts?
+
+If yes: design test scenarios, execute via subagent, score against red lines and acceptance criteria, surgically fix failures, re-score until target met.
+
+Consult `behavioral-eval-guide.md` for the full workflow.
