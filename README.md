@@ -31,7 +31,7 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 
 - **Knowledge layer diagnosis.** The `boost` command diagnoses where a skill sits: Layer 1 (correct but generic), Layer 2 (pattern-aware but no identity), or Layer 3 (distinctive, can detect its own errors). Each layer has a different upgrade path. No wasted effort applying Layer 3 techniques to a Layer 1 skill.
 
-- **4-layer token architecture.** Skills don't dump everything into one file. Metadata (~100 words) → Router (≤500 words) → Workflow (≤2,000 words) → Reference (on-demand). Only one workflow loads per invocation. This skill's own SKILL.md is 499 words.
+- **4-layer token architecture.** Skills don't dump everything into one file. Metadata (~100 words) → Router (≤1,000 words) → Workflow (≤2,000 words) → Reference (on-demand). Only one workflow loads per invocation.
 
 - **Cross-platform by default.** Instructions use semantic verbs ("read the file," "search the codebase"), not platform tool names. One skill package works on all four supported platforms without modification.
 

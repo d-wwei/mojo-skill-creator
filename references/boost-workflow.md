@@ -75,7 +75,7 @@ Count words in SKILL.md body (excl. frontmatter), always-loaded references, and 
 | SKILL.md body | ≤ 2000 words | > 2000 words |
 | Always-loaded total | ≤ 3000 words | > 3000 words |
 | Single reference file | ≤ 5000 words | > 5000 words |
-| Layer 1 (router) content | ≤ 500 words | > 500 words |
+| Layer 1 (router) content | ≤ 1000 words | > 1000 words |
 
 **Artifact**: `diagnosis/token-audit.md` — word counts + compression opportunities.
 

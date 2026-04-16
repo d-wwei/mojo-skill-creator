@@ -124,7 +124,7 @@ For each red line from 3a, classify its enforcement axis. Follow `constraint-enf
 | Layer | Content | Target |
 |-------|---------|--------|
 | 0: Metadata | name + description (frontmatter) | ≤ 100 words |
-| 1: Router | SKILL.md body — core principles, routing, pointers | ≤ 500 words |
+| 1: Router | SKILL.md body — core principles, routing, pointers | ≤ 1000 words |
 | 2: Workflow | Primary workflow instructions (in references/) | ≤ 2000 words per file |
 | 3: Reference | Deep reference material (in references/) | Loaded on-demand only |
 
@@ -196,7 +196,7 @@ description: This skill should be used when the user asks to "phrase 1", "phrase
 - Include 3-5 specific trigger phrases from Step 1
 - One-line capability summary after trigger phrases
 
-**Body structure** (target ≤ 500 words): `# Name` → `## Stance` → `## Red Lines` (always loaded) → `## Acceptance` → `## Workflow` (sub-command routing + reference pointers with word counts) → `## References`.
+**Body structure** (target ≤ 1000 words): `# Name` → `## Stance` → `## Red Lines` (always loaded) → `## Acceptance` → `## Workflow` (sub-command routing + reference pointers with word counts) → `## References`.
 
 **Writing style**: Imperative form. "Read the input" not "You should read the input."
 
