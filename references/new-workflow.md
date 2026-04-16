@@ -8,10 +8,9 @@ Complete workflow for creating a new agent skill from scratch. Produces a cross-
 
 ## Prerequisites
 
-Before starting, have ready:
-- A clear idea of what the skill should do (even rough is fine — Step 1 will refine it)
-- Knowledge of the target domain (or access to someone who has it)
-- Decision on target platforms (default: all four — Claude Code, Codex, Gemini CLI, OpenClaw)
+- Rough idea of what the skill should do (Step 1 refines it)
+- Domain knowledge or access to a domain expert
+- Target platforms decided (default: all four)
 
 ---
 
@@ -24,6 +23,7 @@ Each step writes its output to the target skill's `build/` directory. All artifa
 | 1 | `build/examples.md` | 3-5 concrete examples with input/output/failure cases |
 | 2 | `build/domain-research.md` | ≥ 5 source entries (per Research Minimums) + research synthesis |
 | 3 | `build/red-lines-and-criteria.md` | ≥ 5 red lines + ≥ 3 acceptance criteria + stance definition |
+| 3d | `build/constraint-enforcement-plan.md` | Each red line classified Think/Do + mechanism designs for Do items |
 | 4 | `build/token-architecture.md` | Layer budget table + sub-command decisions + token declarations |
 | 5 | `build/resource-plan.md` | Planned scripts/, references/, assets/ with justification |
 | 6 | (skill files themselves) | SKILL.md + references/ exist per plan |
@@ -62,21 +62,9 @@ There is a clear sense of: input types, output types, success criteria, and fail
 
 **Goal**: Study how the best humans do the task this skill automates. Their workflows, principles, and standards become the skill's foundation.
 
-Do NOT skip this step. A skill designed from abstract principles produces generic output. A skill designed from real expert workflows produces output with the depth that only domain experience provides.
+Do NOT skip this step. Follow the complete research process in `domain-research-guide.md` (identify domain → find practitioners → extract workflows → cross-disciplinary scan → synthesize).
 
-Follow the complete research process in `domain-research-guide.md`. The guide covers:
-
-1. **Identify the domain** — name the real-world discipline
-2. **Find the best practitioners** — leaders, companies, teams with proven track records
-3. **Extract workflow, principles, standards** — their actual operational process, not their marketing
-4. **Cross-disciplinary scan** — does the same problem structure exist in another field?
-5. **Synthesize and rethink** — lay all findings together, then ask:
-   - Does the skill need a fundamentally different workflow structure?
-   - Do expert principles contradict any initial assumptions?
-   - What should the quality bar actually look like?
-6. **Produce a research synthesis** — revised workflow design, quality standards, red line candidates, stance candidate
-
-**The synthesis is the key output.** It feeds directly into Step 3 (red lines from expert standards), Step 3c (stance from expert mindset), and Step 6c (workflow from expert process).
+**The synthesis is the key output.** It feeds into Step 3 (red lines), Step 3c (stance), and Step 6c (workflow).
 
 ### Conclude When
 
@@ -107,19 +95,23 @@ List what the skill MUST NOT produce. Each red line must be mechanically checkab
 
 ### 3b. Acceptance Criteria (3-5 items)
 
-List testable quality standards from the user's perspective. Informed by the quality bars discovered in Step 2.
-
-**Quality test**: For each criterion, ask: "Can someone verify this without domain expertise?" If no, make it more concrete.
+List testable quality standards from the user's perspective, informed by Step 2's quality bars. **Test**: "Can someone verify this without domain expertise?" If no, make it more concrete.
 
 ### 3c. Stance (not role)
 
-Define the cognitive position, not an identity. The stance should reflect the expert mindset discovered in Step 2 — how do the best practitioners think about this domain?
-
-**Template**: "[What the skill does, expressed as a relationship to the problem]. [What it explicitly does NOT do]."
-
-Consult `design-philosophy.md` § Stance Over Role for examples.
+Cognitive position reflecting the expert mindset from Step 2. **Template**: "[Relationship to the problem]. [What it does NOT do]." See `design-philosophy.md` § Stance Over Role.
 
 **Artifact**: Write red lines, acceptance criteria, and stance to `build/red-lines-and-criteria.md`.
+
+### 3d. Constraint Enforcement Design
+
+For each red line from 3a, classify its enforcement axis. Follow `constraint-enforcement-guide.md`.
+
+1. High-stakes + mechanically checkable → assign a Do mechanism (artifact gate, hook, verification script, or sub-agent scope)
+2. Low-stakes or not mechanically checkable → Think-axis sufficient
+3. For each Do mechanism, write the specific template (hook rule, gate condition, or script)
+
+**Artifact**: Write classification table and mechanism designs to `build/constraint-enforcement-plan.md`.
 
 ---
 
@@ -204,32 +196,9 @@ description: This skill should be used when the user asks to "phrase 1", "phrase
 - Include 3-5 specific trigger phrases from Step 1
 - One-line capability summary after trigger phrases
 
-**Body structure** (target ≤ 500 words):
+**Body structure** (target ≤ 500 words): `# Name` → `## Stance` → `## Red Lines` (always loaded) → `## Acceptance` → `## Workflow` (sub-command routing + reference pointers with word counts) → `## References`.
 
-```markdown
-# Skill Name
-
-[1-2 sentence purpose statement]
-
-## Stance
-[Cognitive position from Step 2c]
-
-## Red Lines
-[5-10 items from Step 2a — these are ALWAYS loaded, so they go in Layer 1]
-
-## Acceptance
-[3-5 criteria from Step 2b]
-
-## Workflow
-[Sub-command routing OR direct workflow reference]
-- For `command-a`: follow `references/command-a-workflow.md` (~N words)
-- For `command-b`: follow `references/command-b-workflow.md` (~N words)
-
-## References
-- `references/file.md` (~N words) — [when to load]
-```
-
-**Writing style**: Imperative/infinitive form. "Read the input" not "You should read the input."
+**Writing style**: Imperative form. "Read the input" not "You should read the input."
 
 ### 6c. Write Workflow References (Layer 2)
 
@@ -262,19 +231,7 @@ Only if needed. These are loaded on-demand by the agent, never automatically.
 
 ### Artifact Template
 
-If observability is needed, add to the workflow:
-
-```markdown
-## Artifact Output
-
-After completing the workflow, write a summary document to `docs/{skill-name}/{date}-{topic}.md`:
-
-- **Task Understanding**: What was the input and intent
-- **Key Decisions**: What was chosen and why, what was rejected
-- **Process Log**: Steps taken with evidence
-- **Quality Verification**: Which red lines were checked, results
-- **Deliverable**: Final output with usage notes
-```
+If needed, add to the workflow: write summary to `docs/{skill-name}/{date}-{topic}.md` covering: task understanding, key decisions (chosen + rejected), process evidence, red line verification results, deliverable with usage notes.
 
 ---
 
@@ -286,26 +243,15 @@ Consult `se-kit-integration.md` for the full integration guide.
 
 ### When to Add
 
-| Skill Type | Recommendation |
-|-----------|---------------|
-| Analysis / decision skills | Recommended — accumulates domain experience |
-| Creative / generative skills | Recommended — learns style preferences from feedback |
-| Tool / transformation skills | Usually not needed — behavior is fixed |
-| Cognitive / thinking skills | Optional — can accumulate thinking pattern cases |
+| Skill Type | SE-Kit? | Rationale |
+|-----------|---------|-----------|
+| Analysis / decision | Recommended | Accumulates domain experience |
+| Creative / generative | Recommended | Learns style preferences |
+| Tool / transformation | Usually not | Behavior is fixed |
 
 ### What It Does
 
-Bundles skill-se-kit (~48KB) inside the skill package. At runtime, after each task completion, the main agent dispatches a sub-agent to execute the self-evolution protocol:
-- Extract feedback from the completed task
-- Record experience to `se-workspace/experience/`
-- Update skill bank via decision tree (ADD/MERGE/SUPERSEDE/DISCARD)
-- Maintain audit trail in `se-workspace/audit/`
-
-The skill works identically without self-evolution enabled — it is a pure enhancement, not a dependency.
-
-### Key Constraint
-
-The skill-se-kit is bundled INTO the distributed skill package (inside `se-kit/` directory). End users do NOT need to install anything globally. The package is self-contained.
+Bundles skill-se-kit (~48KB) inside the skill package (`se-kit/` directory). At runtime, dispatches a sub-agent after each task to extract feedback, record experience, and update skill bank. Pure enhancement — skill works identically without it. End users install nothing; package is self-contained.
 
 ---
 
@@ -322,7 +268,13 @@ Before declaring the skill complete, verify:
 7. **Stance is defined** — not a role/identity
 8. **Symlink test**: Skill can be symlinked into any platform's discovery path and loaded
 
-**Artifact**: Write validation results to `build/validation-checklist.md`.
+**Structural verification** (run and paste output before proceeding):
+- `scripts/verify-token-budget.sh <skill-dir>` — checks word count limits
+- `scripts/verify-platform-names.sh <skill-dir>` — checks for platform-specific tool names
+- `scripts/verify-artifact-content.sh <skill-dir>/build/domain-research.md domain-research` — checks source count
+- `scripts/verify-artifact-content.sh <skill-dir>/build/red-lines-and-criteria.md red-lines` — checks red line count + sections
+
+**Artifact**: Write validation results (including script output) to `build/validation-checklist.md`.
 
 ### Completion Gate
 
@@ -331,6 +283,7 @@ Before declaring the new skill complete, verify ALL mandatory artifacts exist in
 - [ ] `build/examples.md` — 3-5 examples with input/output/failure
 - [ ] `build/domain-research.md` — ≥ 5 sources + synthesis
 - [ ] `build/red-lines-and-criteria.md` — ≥ 5 red lines + ≥ 3 criteria + stance
+- [ ] `build/constraint-enforcement-plan.md` — each red line classified Think/Do + Do mechanism designs
 - [ ] `build/token-architecture.md` — layer budget + declarations
 - [ ] `build/resource-plan.md` — resource list with justifications
 - [ ] `build/validation-checklist.md` — 8-item checklist, all pass

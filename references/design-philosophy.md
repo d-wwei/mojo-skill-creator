@@ -1,6 +1,6 @@
 # Design Philosophy
 
-Six principles for designing high-quality agent skills. Each principle applies regardless of target platform.
+Seven principles for designing high-quality agent skills. Each principle applies regardless of target platform.
 
 ---
 
@@ -155,3 +155,31 @@ Build the acquisition step into every content-input skill to reduce user cogniti
 If a skill description contains "and" connecting two distinct capabilities, it should be two skills:
 - "Analyze papers AND generate visual cards" → two skills + one workflow
 - "Analyze papers with deep reading AND citation tracing" → one skill (single coherent capability)
+
+---
+
+## 7. Dual-Axis Constraints (认知 + 结构)
+
+### Principle
+
+Every critical constraint must exist on two axes simultaneously:
+
+- **Think axis** — cognitive constraints the agent follows voluntarily: red lines, acceptance criteria, stance directives. These give the agent *reasoning context* for why a constraint exists.
+- **Do axis** — structural enforcement that makes violation impossible or immediately detectable: hooks, artifact gates, verification scripts, sub-agent scoping. These work even when the agent "forgets."
+
+### Why Both Axes
+
+Think-only constraints get skipped under pressure — the agent optimizes for the next token and quietly drops a rule it was told to follow three sections ago. Do-only constraints lack context — the agent triggers a gate failure but doesn't understand *why*, leading to shallow workarounds instead of genuine compliance.
+
+The combination is what produces reliable behavior: the Think axis makes the agent *want* to comply; the Do axis makes non-compliance *visible*.
+
+### Example
+
+| Think-only (fragile) | Think + Do (robust) |
+|---------------------|---------------------|
+| "Always grep callers before modifying a public interface." | Same red line + a `PreToolUse` hook that blocks `Edit` on interface files if no `Grep` was executed this session. |
+| "Run tests before claiming done." | Same red line + an artifact gate that requires test-output evidence before the completion step unlocks. |
+
+### Design Test
+
+For each red line in a skill, ask: "If the agent ignores this rule, will anything *structurally* catch it?" If the answer is no, add a Do-axis enforcement. If enforcement exists but the agent doesn't understand why, add Think-axis context.
