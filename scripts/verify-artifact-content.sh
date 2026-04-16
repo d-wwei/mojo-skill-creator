@@ -16,7 +16,7 @@ CHECK="${2:-}"
 
 if [ -z "$FILE" ] || [ -z "$CHECK" ]; then
     echo "Usage: $0 <artifact-path> <check-type>"
-    echo "Types: domain-research | red-lines | enforcement-plan | validation"
+    echo "Types: domain-research | red-lines | enforcement-plan | constraint-audit | validation"
     exit 2
 fi
 
@@ -27,15 +27,16 @@ fi
 
 FAIL=0
 
+# Safe grep -c wrapper: returns count or 0 without triggering set -e
+gcount() { grep -cE "$1" "$2" 2>/dev/null || true; }
+gcounti() { grep -ciE "$1" "$2" 2>/dev/null || true; }
+
 case "$CHECK" in
     domain-research)
-        # Count source entries (lines starting with ### or ## that look like source headers,
-        # or numbered items with source-like content)
-        COUNT=$(grep -cE '^\#{2,3} .*(Source|source|[0-9]+\.)' "$FILE" 2>/dev/null || echo 0)
-        # Fallback: count lines with "Name:" or "Key finding:" patterns
+        COUNT=$(gcount '^\#{2,3} .*(Source|source|[0-9]+\.)' "$FILE")
         if [ "$COUNT" -lt 5 ]; then
-            COUNT=$(grep -ciE '(name:|source:|key finding|implication)' "$FILE" 2>/dev/null || echo 0)
-            COUNT=$((COUNT / 2))  # Rough: each source has ~2 matching lines
+            COUNT=$(gcounti '(name:|source:|key finding|implication)' "$FILE")
+            COUNT=$((COUNT / 2))
         fi
         if [ "$COUNT" -lt 5 ]; then
             echo "FAIL: domain-research has ~${COUNT} sources (need ≥5)"
@@ -45,21 +46,19 @@ case "$CHECK" in
         fi
         ;;
     red-lines)
-        RL_COUNT=$(grep -cE '^- .*\b(No |Never |Must not )' "$FILE" 2>/dev/null || echo 0)
+        RL_COUNT=$(gcount '^- .*\b(No |Never |Must not )' "$FILE")
         if [ "$RL_COUNT" -lt 5 ]; then
             echo "FAIL: red-lines has ${RL_COUNT} items (need ≥5)"
             FAIL=1
         else
             echo "PASS: red-lines has ${RL_COUNT} items (need ≥5)"
         fi
-        # Check for acceptance criteria section
         if ! grep -qiE '(acceptance|criteria)' "$FILE" 2>/dev/null; then
             echo "FAIL: no Acceptance Criteria section found"
             FAIL=1
         else
             echo "PASS: Acceptance Criteria section found"
         fi
-        # Check for stance section
         if ! grep -qiE '(stance)' "$FILE" 2>/dev/null; then
             echo "FAIL: no Stance section found"
             FAIL=1
@@ -68,16 +67,14 @@ case "$CHECK" in
         fi
         ;;
     enforcement-plan)
-        # Must contain a classification table with Think/Do mentions
         if ! grep -qE '(Think|Do).*\|' "$FILE" 2>/dev/null; then
             echo "FAIL: no Think/Do classification table found"
             FAIL=1
         else
             echo "PASS: Think/Do classification table found"
         fi
-        # Check ≥30% Do-axis ratio
-        TOTAL_ROWS=$(grep -cE '\|.*\|.*\|' "$FILE" 2>/dev/null || echo 0)
-        DO_ROWS=$(grep -ciE '\|.*Do.*\|' "$FILE" 2>/dev/null || echo 0)
+        TOTAL_ROWS=$(gcount '\|.*\|.*\|' "$FILE")
+        DO_ROWS=$(gcounti '\|.*Do.*\|' "$FILE")
         if [ "$TOTAL_ROWS" -gt 0 ]; then
             RATIO=$((DO_ROWS * 100 / TOTAL_ROWS))
             if [ "$RATIO" -lt 30 ]; then
@@ -89,15 +86,13 @@ case "$CHECK" in
         fi
         ;;
     constraint-audit)
-        # Must contain enforcement ratio
         if ! grep -qiE '(enforcement ratio|enforcement.*[0-9]+%)' "$FILE" 2>/dev/null; then
             echo "FAIL: no enforcement ratio found"
             FAIL=1
         else
             echo "PASS: enforcement ratio found"
         fi
-        # Must identify upgrade candidates (≥3 or justified fewer)
-        CANDIDATES=$(grep -ciE '(upgrade candidate|highest.stakes|top [0-9])' "$FILE" 2>/dev/null || echo 0)
+        CANDIDATES=$(gcounti '(upgrade candidate|highest.stakes|top [0-9])' "$FILE")
         if [ "$CANDIDATES" -lt 1 ]; then
             echo "FAIL: no upgrade candidates section found"
             FAIL=1
@@ -106,7 +101,7 @@ case "$CHECK" in
         fi
         ;;
     validation)
-        ITEMS=$(grep -cE '^\s*-\s*\[[ x]\]' "$FILE" 2>/dev/null || echo 0)
+        ITEMS=$(gcount '^\s*-\s*\[[ x]\]' "$FILE")
         if [ "$ITEMS" -lt 8 ]; then
             echo "FAIL: validation has ${ITEMS} checklist items (need ≥8)"
             FAIL=1
