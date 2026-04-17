@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.0] - 2026-04-17
+
+### Added
+- Step 10: Behavioral Eval & Surgical Fix (Optional) in `new` workflow
+- `references/behavioral-eval-guide.md` — 5-phase eval loop: design scenarios → subagent execution → weighted scoring → surgical fix → re-score
+- Test scenario coverage: ≥3 minimum (simple/boundary/adversarial), no upper limit, per-sub-command and per-red-line coverage required
+- Scoring system: red lines = CRITICAL (3x), acceptance criteria = HIGH (2x), quality dimensions = MEDIUM (1x)
+- Surgical fix protocol with strict discipline: one FAIL → one fix → verify → regression → next
+- Termination rules: SUCCESS (≥A/90%), PLATEAU (3 rounds <5% gain), MAX_ROUNDS (10)
+- Upgrade trigger: plateau or max rounds → recommend `boost` for structural redesign
+
+### Changed
+- Router layer token budget: 500w → 1000w (across SKILL.md, new-workflow.md, boost-workflow.md, README.md, README.zh-CN.md)
+- Step 8 validation: router word count target updated from 500 to 1000
+
 ## [0.3.0] - 2026-04-15
 
 ### Added

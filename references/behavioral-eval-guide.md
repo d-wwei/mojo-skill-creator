@@ -20,7 +20,9 @@ Quantified evaluation of skill behavior via simulated tasks, followed by targete
 
 ## Phase 1: Design Test Scenarios
 
-Derive 3-5 test scenarios from Step 1's concrete examples. Each scenario must cover a different difficulty level.
+Derive test scenarios from Step 1's concrete examples. Goal: cover every sub-command, trigger path, and quality dimension the skill exposes.
+
+**Minimum floor**: ≥ 3 scenarios covering simple, boundary, and adversarial. **No upper limit** — scale with skill complexity. A single-command utility skill may need 3; a multi-mode creative skill may need 10+.
 
 ### Scenario Template
 
@@ -32,13 +34,15 @@ Derive 3-5 test scenarios from Step 1's concrete examples. Each scenario must co
 - **Known failure modes**: [what bad output looks like for this scenario]
 ```
 
-### Scenario Mix
+### Required Coverage
 
-| Type | Purpose | Example |
+| Type | Minimum | Purpose |
 |------|---------|---------|
-| Simple (1-2) | Baseline — does the skill work at all? | Straightforward request matching a Step 1 example |
-| Boundary (1-2) | Edge cases — does quality hold under pressure? | Ambiguous input, missing context, unusual domain |
-| Adversarial (1) | Stress test — does the skill resist common failure modes? | Request that tempts the agent to violate a red line |
+| Simple | ≥ 1 | Baseline — does the skill work at all? |
+| Boundary | ≥ 1 | Edge cases — does quality hold under pressure? |
+| Adversarial | ≥ 1 | Stress test — does the skill resist common failure modes? |
+| Per sub-command | ≥ 1 each | Every entry point exercised |
+| Per red line | ≥ 1 each | Every constraint tested by a scenario that could violate it |
 
 **Artifact**: `build/eval-scenarios.md`
 
@@ -122,7 +126,7 @@ Result multipliers: PASS=1.0, WARN=0.5, FAIL=0.0
 
 ## Phase 4: Surgical Fix
 
-**Entry condition**: Score < target (default: B grade, ≥ 75%) or any CRITICAL FAIL.
+**Entry condition**: Score < target (default: A grade, ≥ 90%) or any CRITICAL FAIL.
 
 For each FAIL item, in priority order (CRITICAL first, then HIGH, then MEDIUM):
 
@@ -157,9 +161,9 @@ After all FAIL items in a round are addressed, re-run Phase 2 and Phase 3 on all
 
 | Rule | Condition | Action |
 |------|-----------|--------|
-| **SUCCESS** | Score ≥ target AND no CRITICAL FAIL | Exit. Skill passes behavioral eval. |
+| **SUCCESS** | Score ≥ A (90%) AND no CRITICAL FAIL | Exit. Skill passes behavioral eval. |
 | **PLATEAU** | 3 consecutive rounds with < 5% score improvement | Exit. Recommend `boost` for structural redesign. |
-| **MAX_ROUNDS** | 5 rounds completed | Exit. Remaining issues likely need workflow-level changes, not surgical fixes. |
+| **MAX_ROUNDS** | 10 rounds completed | Exit. Remaining issues likely need workflow-level changes, not surgical fixes. |
 
 ### History Tracking
 
