@@ -34,7 +34,7 @@ Each diagnosis step writes its findings to the target skill's `diagnosis/` direc
 
 | Step | Artifact | Gate Condition |
 |------|----------|----------------|
-| 1.1 | `diagnosis/structural-audit.md` | 7-item check table with pass/fail per item |
+| 1.1 | `diagnosis/structural-audit.md` | 9-item check table with pass/fail per item |
 | 1.2 | `diagnosis/layer-diagnosis.md` | Layer number (1/2/3) with test evidence |
 | 1.3 | `diagnosis/token-audit.md` | Word counts: SKILL.md body, always-loaded total, each reference |
 | 1.4 | (optional — no artifact) | — |
@@ -55,6 +55,8 @@ Each diagnosis step writes its findings to the target skill's `diagnosis/` direc
 | Stance defined (not role) | Cognitive position, not "You are an expert..." | Architecture |
 | Referenced files exist | All paths in SKILL.md point to real files | Mechanical |
 | Writing style: imperative form | No "you should" / "you need to" | Mechanical |
+| Backward compatibility (P6) | No breaking changes to published interfaces since previous tag. Check: diff SKILL.md interface sections vs. previous version | Architecture |
+| ADR directory (P4+P5) | Major design decisions have ADR records. Check: `docs/adr/` exists if decisions affected ≥2 files | Architecture |
 
 **Artifact**: `diagnosis/structural-audit.md` — defect list with type classification.
 
@@ -113,6 +115,7 @@ Classify each red line by enforcement axis. Follow `constraint-enforcement-guide
 2. For each: Think-only or Think+Do? If Do, what mechanism?
 3. Calculate enforcement ratio
 4. Identify top 3 highest-stakes Think-only constraints for upgrade
+5. **ADR audit (P4+P5)**: Check `docs/adr/` for coverage of major decisions. Flag architecture decisions without ADR records
 
 **Artifact**: Write to `diagnosis/constraint-enforcement-audit.md`.
 
@@ -120,7 +123,7 @@ Classify each red line by enforcement axis. Follow `constraint-enforcement-guide
 
 Before proceeding to Phase 2, verify ALL mandatory artifacts exist in `diagnosis/`:
 
-- [ ] `diagnosis/structural-audit.md` — contains 7-item check table
+- [ ] `diagnosis/structural-audit.md` — contains 9-item check table
 - [ ] `diagnosis/layer-diagnosis.md` — states layer with evidence
 - [ ] `diagnosis/token-audit.md` — contains word count metrics
 - [ ] `diagnosis/platform-check.md` — lists issues or confirms clean

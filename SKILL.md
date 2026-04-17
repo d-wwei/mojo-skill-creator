@@ -42,6 +42,9 @@ See: `references/design-philosophy.md` (~1100w)
 - No phase/step completes without mandatory artifact in diagnosis/ (boost) or build/ (new). Check: artifact exists before next step
 - No domain research completed with < 5 independent sources. Check: research artifact contains ≥ 5 entries with name, finding, and implication
 - No high-stakes red line in a produced skill left cognitive-only when structural enforcement is feasible. Check: `build/constraint-enforcement-plan.md` classifies each red line's enforcement axis
+- No architecture decision (affecting ≥2 files or constraining future changes) without an ADR. Check: `docs/adr/` contains entry with all 5 sections
+- No breaking change to published interfaces (semver-tagged or distributed) without deprecation. Check: diff interface sections against previous version tag
+- No secret (password, API key, token) transits LLM conversation or appears in logs. Check: grep for credential patterns in transcripts and source
 
 ## Acceptance
 
@@ -50,6 +53,23 @@ See: `references/design-philosophy.md` (~1100w)
 - Always-loaded tokens ≤ 3000 words
 - Design decisions traceable to named files/headings
 - Constraint enforcement plan classifies ≥30% of red lines with Do-axis mechanisms
+
+## Development Practices
+
+Engineering discipline for MSC development [A] and produced skills [B]. Full rules + ADR template + CHANGELOG spec: `references/development-practices.md`
+
+1. P1 [AB] Zero-dependency preference — justify every added dependency
+2. P2 [AB] Every new feature ships with tests
+3. P3 [AB] Every decision has a research trail, not convention alone
+4. P4+P5 [AB] Architecture decisions and non-decisions recorded as ADRs
+5. P6 [AB] Backward compatibility — published interfaces cannot break
+6. P7 [AB] Linter zero warnings as CI gate
+7. P8 [AB] CHANGELOG in hybrid format (narrative header + Keep a Changelog)
+8. P10 [AB] Secrets never transit LLM conversation or logs
+9. P12 [AB] Prove existing mechanisms insufficient before adding features
+10. P13 [AB] Investigate actual user behavior before adding or cutting features
+
+Conditional (B only, in reference file): security layered design (P9), anti-duplicate counting (P11).
 
 ## References
 
@@ -65,3 +85,4 @@ See: `references/design-philosophy.md` (~1100w)
 | `references/quality-ladder.md` (~1200w) | Knowledge layer diagnosis + case methodology | `boost` diagnosis |
 | `references/se-kit-integration.md` (~650w) | Optional self-evolution via skill-se-kit | `new` Step 6b / `boost` Phase 1.6 |
 | `references/behavioral-eval-guide.md` (~900w) | Optional behavioral eval + surgical fix loop | `new` Step 10 |
+| `references/development-practices.md` (~900w) | Development practices, ADR template, CHANGELOG spec | Designing red lines, reviewing changes |

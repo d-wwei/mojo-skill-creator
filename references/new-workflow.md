@@ -38,9 +38,9 @@ Each step writes its output to the target skill's `build/` directory. All artifa
 
 ## Step 1: Understand the Skill with Concrete Examples
 
-**Goal**: Build a clear picture of how the skill will be used in practice.
+**Goal**: Build a clear picture of skill usage. Even obvious skills need concrete examples — they surface hidden requirements.
 
-Do NOT skip this step. Even when the skill seems obvious, concrete examples surface hidden requirements.
+**Dev Practice P12/P13**: Before collecting examples, search existing skills for overlapping coverage. Ground examples in observed user behavior, not assumed needs.
 
 ### Actions
 
@@ -61,9 +61,11 @@ There is a clear sense of: input types, output types, success criteria, and fail
 
 ## Step 2: Research Domain Best Practices
 
-**Goal**: Study how the best humans do the task this skill automates. Their workflows, principles, and standards become the skill's foundation.
+**Goal**: Study how experts do the task this skill automates — their workflows become the skill's foundation.
 
-Do NOT skip this step. Follow the complete research process in `domain-research-guide.md` (identify domain → find practitioners → extract workflows → cross-disciplinary scan → synthesize).
+**Dev Practice P3**: Extend research scope beyond domain practices to architecture and tool-selection decisions. Every choice needs a research trail.
+
+Follow the complete process in `domain-research-guide.md` (identify domain → find practitioners → extract workflows → cross-disciplinary scan → synthesize).
 
 **The synthesis is the key output.** It feeds into Step 3 (red lines), Step 3c (stance), and Step 6c (workflow).
 
@@ -78,6 +80,8 @@ A research synthesis document exists with: domain leaders studied, revised workf
 ## Step 3: Design Red Lines and Acceptance Criteria
 
 **Goal**: Define the quality floor BEFORE defining the workflow. Source red lines from the domain research in Step 2, not from abstract principles alone.
+
+**Dev Practice P4+P5**: Record significant "decided not to do" decisions alongside design choices. Use ADR format for decisions affecting ≥2 files.
 
 ### 3a. Red Lines (5-10 items)
 
@@ -151,6 +155,8 @@ In SKILL.md, annotate each reference pointer with estimated token cost:
 
 **Goal**: Identify what scripts, references, and assets the skill needs.
 
+**Dev Practice P1**: Audit each planned resource — justify every dependency. Prefer single-file solutions over packages.
+
 For each concrete example from Step 1, ask:
 1. What would need to be rewritten from scratch every time? → `scripts/`
 2. What reference knowledge would the agent need? → `references/`
@@ -169,19 +175,19 @@ After listing resources, check:
 
 ## Step 6: Create the Skill
 
+**Dev Practice P6**: If upgrading an existing skill, check backward compatibility — published command formats and config structures must not break.
+
 ### 6a. Directory Structure
 
 ```
 skill-name/
-├── SKILL.md                    # Layer 1: Router
-├── references/                 # Layer 2-3: Workflows and deep references
-│   ├── primary-workflow.md
-│   └── (additional references)
-├── scripts/                    # Optional: executable tools
-└── assets/                     # Optional: output templates
+├── SKILL.md         # Router (Layer 1)
+├── references/      # Workflows + deep refs (Layer 2-3)
+├── scripts/         # Optional
+└── assets/          # Optional
 ```
 
-Create only the directories actually needed. An empty `scripts/` wastes attention.
+Create only directories actually needed.
 
 ### 6b. Write SKILL.md (Layer 1 Router)
 
@@ -220,7 +226,7 @@ Only if needed. These are loaded on-demand by the agent, never automatically.
 
 ## Step 7: Human Observability (Optional)
 
-**Decision point**: Does this skill's execution process need to be auditable by humans?
+**Decision point**: Does execution need to be human-auditable?
 
 ### When to Add
 
@@ -252,11 +258,13 @@ Consult `se-kit-integration.md` for the full integration guide.
 
 ### What It Does
 
-Bundles skill-se-kit (~48KB) inside the skill package (`se-kit/` directory). At runtime, dispatches a sub-agent after each task to extract feedback, record experience, and update skill bank. Pure enhancement — skill works identically without it. End users install nothing; package is self-contained.
+Bundles skill-se-kit (~48KB) in `se-kit/`. Sub-agent extracts feedback and updates skill bank per task. Pure enhancement — works without it; end users install nothing.
 
 ---
 
 ## Step 8: Cross-Platform Validation
+
+**Dev Practice P7/P8**: Verify project linter passes clean (if CI configured). Check CHANGELOG exists in hybrid format (narrative + KaC).
 
 Before declaring the skill complete, verify:
 
@@ -290,26 +298,22 @@ Before declaring the new skill complete, verify ALL mandatory artifacts exist in
 - [ ] `build/validation-checklist.md` — 8-item checklist, all pass
 - [ ] Skill's SKILL.md traces its red lines, stance, and workflow back to `build/domain-research.md`
 
-Missing artifacts = skill is not complete. Do not proceed to iteration until this gate passes.
+Missing artifacts = skill is not complete. Do not proceed until this gate passes.
 
 ---
 
 ## Step 9: Iterate
 
 After first use, observe:
-- Did the agent trigger the skill on the right requests? (If not, refine description)
-- Did the agent follow the workflow effectively? (If not, clarify instructions)
-- Did the output pass the red lines? (If not, strengthen constraints)
-- Was the token budget respected? (If not, move content to deeper layers)
+- Agent triggers on right requests? Refine description if not
+- Agent follows workflow? Clarify instructions if not
+- Output passes red lines? Strengthen constraints if not
+- Token budget respected? Move content to deeper layers if not
 
-Feed observations back into Steps 2-5. Each iteration should either tighten a red line, clarify a workflow step, or compress a token-heavy section.
+Feed observations back into Steps 2-5.
 
 ---
 
 ## Step 10: Behavioral Eval & Surgical Fix (Optional)
 
-**Decision point**: Does this skill's output have subjective quality dimensions not verifiable by scripts?
-
-If yes: design test scenarios, execute via subagent, score against red lines and acceptance criteria, surgically fix failures, re-score until target met.
-
-Consult `behavioral-eval-guide.md` for the full workflow.
+**Decision point**: Does output quality require testing beyond scripts? If yes, follow `behavioral-eval-guide.md` — design scenarios, subagent execution, scoring, surgical fix, re-score.
