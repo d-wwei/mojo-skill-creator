@@ -5,13 +5,11 @@
 **Tags**: principles, ADR, CHANGELOG, enforcement, token-budget
 **Commit**: defbc84
 
-## Problem
+## Root Cause / Problem
 
 MSC had 7 design philosophy principles and 10 red lines — both focused on skill design quality. Missing: engineering discipline rules (dependency management, backward compatibility, decision recording, testing, secrets safety). 13 principles from production experience needed a structured home.
 
-## Root Cause
-
-Design philosophy ("how to design") and engineering practices ("how to develop") are distinct categories. MSC had formalized the first but not the second. Without codified practices, engineering discipline depended on individual memory across sessions.
+Root cause: design philosophy ("how to design") and engineering practices ("how to develop") are distinct categories. MSC had formalized the first but not the second. Without codified practices, engineering discipline depended on individual memory across sessions.
 
 ## Solution
 
