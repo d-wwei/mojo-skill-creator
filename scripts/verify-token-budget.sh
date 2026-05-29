@@ -8,9 +8,17 @@ set -euo pipefail
 SKILL_DIR="${1:-.}"
 FAIL=0
 
+skill_body_words() {
+    awk '
+        NR == 1 && $0 == "---" { in_frontmatter = 1; next }
+        in_frontmatter && $0 == "---" { in_frontmatter = 0; next }
+        !in_frontmatter { print }
+    ' "$1" | wc -w | tr -d ' '
+}
+
 # Check SKILL.md body (excluding frontmatter) — limit: 2000 words
 if [ -f "$SKILL_DIR/SKILL.md" ]; then
-    BODY_WORDS=$(sed '/^---$/,/^---$/d' "$SKILL_DIR/SKILL.md" | wc -w | tr -d ' ')
+    BODY_WORDS=$(skill_body_words "$SKILL_DIR/SKILL.md")
     if [ "$BODY_WORDS" -gt 2000 ]; then
         echo "FAIL: SKILL.md body is ${BODY_WORDS}w (limit: 2000w)"
         FAIL=1
@@ -21,19 +29,18 @@ else
     echo "WARN: No SKILL.md found in $SKILL_DIR"
 fi
 
-# Check each references/*.md — limit: 2000 words per file
+# Check each references/**/*.md — limit: 2000 words per file
 if [ -d "$SKILL_DIR/references" ]; then
-    for f in "$SKILL_DIR/references"/*.md; do
-        [ -f "$f" ] || continue
+    while IFS= read -r f; do
         WORDS=$(wc -w < "$f" | tr -d ' ')
-        BASENAME=$(basename "$f")
+        REL="${f#"$SKILL_DIR"/}"
         if [ "$WORDS" -gt 2000 ]; then
-            echo "FAIL: references/$BASENAME is ${WORDS}w (limit: 2000w)"
+            echo "FAIL: ${REL} is ${WORDS}w (limit: 2000w)"
             FAIL=1
         else
-            echo "PASS: references/$BASENAME is ${WORDS}w (limit: 2000w)"
+            echo "PASS: ${REL} is ${WORDS}w (limit: 2000w)"
         fi
-    done
+    done < <(find "$SKILL_DIR/references" -type f -name '*.md' | sort)
 fi
 
 exit $FAIL

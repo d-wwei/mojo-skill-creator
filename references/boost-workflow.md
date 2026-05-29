@@ -87,7 +87,7 @@ For analysis/decision-type skills: check for durable artifacts, traceable decisi
 
 ### 1.5 Cross-Platform Compatibility Check
 
-Scan all skill files for platform-specific tool names, absolute paths, and platform-dependent features (see `platform-adaptation.md` mapping table).
+Scan portable skill files for platform-specific tool names, absolute paths, and platform-dependent features. Adapter docs may contain platform names when clearly scoped.
 
 **Artifact**: `diagnosis/platform-check.md` — issues list or "clean."
 
@@ -109,13 +109,14 @@ Synthesize all findings (1.1–1.7) before prescribing. Follow `domain-research-
 
 ### 1.9 Constraint Enforcement Audit
 
-Classify each red line by enforcement axis. Follow `constraint-enforcement-guide.md` § "In boost Workflow."
+Classify each red line by enforcement axis and strength. Follow `constraint-enforcement-guide.md` § "In boost Workflow."
 
 1. List all red lines from SKILL.md
-2. For each: Think-only or Think+Do? If Do, what mechanism?
-3. Calculate enforcement ratio
-4. Identify top 3 highest-stakes Think-only constraints for upgrade
-5. **ADR audit (P4+P5)**: Check `docs/adr/` for coverage of major decisions. Flag architecture decisions without ADR records
+2. For each: Think-only or Think+Do? If Do, what strength and mechanism?
+3. Separate portable mechanisms from platform-adapter recommendations
+4. Calculate enforcement ratio
+5. Identify top 3 highest-stakes Think-only constraints for upgrade
+6. **ADR audit (P4+P5)**: Check `docs/adr/` for coverage of major decisions. Flag architecture decisions without ADR records
 
 **Artifact**: Write to `diagnosis/constraint-enforcement-audit.md`.
 
@@ -169,7 +170,7 @@ These block everything else. Fix first.
 
 | Common Fix | Action |
 |-----------|--------|
-| Platform-specific tool names | Replace with semantic verbs throughout |
+| Platform-specific tool names | Replace with semantic verbs in portable files or move details to adapters |
 | Broken cross-references | Fix paths or remove dead references |
 | Inconsistent terminology | Find-and-replace to standardize |
 | Second-person writing style | Replace "you should" with imperative form |

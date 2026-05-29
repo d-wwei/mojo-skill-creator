@@ -16,10 +16,11 @@ Mojo Skill Creator packages all of this into a working tool. It's a skill that c
 
 ## What It Is
 
-Mojo Skill Creator is itself an AI agent skill (SKILL.md + 8 reference files, ~8,500 words total). Install it on any agent that supports the SKILL.md format, and it gains two capabilities:
+Mojo Skill Creator is itself an AI agent skill (SKILL.md + layered references, adapters, and validation scripts). Install it on any agent that supports the SKILL.md format, and it gains two capabilities:
 
-- **`new`** — A 9-step guided process to create a skill from scratch, starting with domain expert research
+- **`new`** — A 10-step guided process to create a skill from scratch, starting with domain expert research
 - **`boost`** — A 4-phase diagnostic and upgrade process for existing skills
+- **`audit`** — A read-only review path for assessing a skill before deciding whether to boost it
 
 Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenClaw) and token-efficient by design.
 
@@ -34,6 +35,8 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 - **4-layer token architecture.** Skills don't dump everything into one file. Metadata (~100 words) → Router (≤1,000 words) → Workflow (≤2,000 words) → Reference (on-demand). Only one workflow loads per invocation.
 
 - **Cross-platform by default.** Instructions use semantic verbs ("read the file," "search the codebase"), not platform tool names. One skill package works on all four supported platforms without modification.
+
+- **Portable core + adapters.** The core constraint model stays platform-neutral, while Claude Code and Codex enforcement details live in adapter references that load only when needed.
 
 - **Optional self-evolution.** Skills can bundle [skill-se-kit](https://github.com/d-wwei/skill-se-kit) (~48KB) to learn from their own usage. After each task, a sub-agent extracts feedback, records experience, and updates a skill bank — the skill improves over time without manual intervention. The se-kit is packaged inside the skill, so end users don't need to install anything extra. Skill authors update the bundled version via `boost` and redistribute.
 
@@ -66,7 +69,7 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 
 ### `boost` — Upgrade an existing skill (4 phases)
 
-**Phase 1: Diagnose** — 8 checks: structural audit, knowledge layer diagnosis, context efficiency, human observability, cross-platform compatibility, self-evolution status, domain best practice research (compare skill's workflow vs expert workflow), and research synthesis (surface fixes or structural redesign?).
+**Phase 1: Diagnose** — structural audit, knowledge layer diagnosis, context efficiency, human observability, cross-platform compatibility, self-evolution status, domain best practice research, research synthesis, and constraint enforcement audit.
 
 **Phase 2: Prescribe** — Architecture fixes → Mechanical fixes → Content upgrades, in strict order. If research synthesis found structural workflow gaps, prescription starts with workflow redesign, not content polish.
 
@@ -87,17 +90,25 @@ Every skill it produces is cross-platform (Claude Code, Codex, Gemini CLI, OpenC
 
 ```bash
 git clone https://github.com/d-wwei/mojo-skill-creator.git
-ln -sf "$(pwd)/mojo-skill-creator" ~/.claude/skills/mojo-skill-creator
+ln -sf "$(pwd)/mojo-skill-creator" ~/.claude/skills/mojo-skill-creator   # Claude Code
+ln -sf "$(pwd)/mojo-skill-creator" ~/.codex/skills/mojo-skill-creator    # Codex-specific
+ln -sf "$(pwd)/mojo-skill-creator" ~/.agents/skills/mojo-skill-creator   # Shared where supported
 ```
 
-Then tell your agent: "Create a new skill" or "Boost this skill."
+Then tell your agent: "Use mojo-skill-creator new", "Use mojo-skill-creator boost", or "Use mojo-skill-creator audit."
+
+## Verification
+
+```bash
+make verify
+```
 
 ### Supported platforms
 
 | Platform | Skill Path |
 |----------|-----------|
 | Claude Code | `~/.claude/skills/` |
-| Codex | `~/.agents/skills/` |
+| Codex | `~/.codex/skills/` for Codex-specific installs; `~/.agents/skills/` for shared installs where supported |
 | Gemini CLI | `~/.gemini/skills/` |
 | OpenClaw | `~/.openclaw/skills/` |
 

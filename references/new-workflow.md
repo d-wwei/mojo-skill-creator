@@ -110,11 +110,12 @@ Cognitive position reflecting the expert mindset from Step 2. **Template**: "[Re
 
 ### 3d. Constraint Enforcement Design
 
-For each red line from 3a, classify its enforcement axis. Follow `constraint-enforcement-guide.md`.
+For each red line from 3a, classify enforcement with `constraint-enforcement-guide.md`.
 
-1. High-stakes + mechanically checkable → assign a Do mechanism (artifact gate, hook, verification script, or sub-agent scope)
-2. Low-stakes or not mechanically checkable → Think-axis sufficient
-3. For each Do mechanism, write the specific template (hook rule, gate condition, or script)
+1. High-stakes + checkable -> assign a Do mechanism (artifact gate, verification script, evidence gate, or adapter mechanism)
+2. Low-stakes or not checkable -> Think-axis sufficient
+3. If a target platform is named, load only that adapter; otherwise keep mechanisms portable
+4. Write the gate, script, evidence, or adapter pointer
 
 **Artifact**: Write classification table and mechanism designs to `build/constraint-enforcement-plan.md`.
 
@@ -211,7 +212,7 @@ description: This skill should be used when the user asks to "phrase 1", "phrase
 
 Each workflow file is self-contained for its path. Target ≤ 2000 words.
 
-The workflow structure should mirror the expert workflow discovered in Step 2. Do not invent a workflow from abstract principles — encode what the best practitioners actually do.
+Mirror the expert workflow from Step 2. Do not invent from abstract principles — encode what top practitioners do.
 
 Include:
 - Step-by-step process with clear input/output per step (mapped from expert workflow phases)
@@ -268,7 +269,7 @@ Bundles skill-se-kit (~48KB) in `se-kit/`. Sub-agent extracts feedback and updat
 
 Before declaring the skill complete, verify:
 
-1. **No platform-specific tool names** in SKILL.md or workflow references
+1. **No platform-specific tool names** in portable SKILL.md or workflow references
 2. **All referenced files exist** at the declared paths
 3. **Frontmatter** has `name` and `description` fields
 4. **SKILL.md word count** ≤ target (1000 for router, 2000 for single-file skills)

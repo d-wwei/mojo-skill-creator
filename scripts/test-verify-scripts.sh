@@ -6,7 +6,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TEST_DIR="/tmp/msc-test-$$"
+TEST_DIR="$(mktemp -d "${TMPDIR:-/tmp}/msc-test.XXXXXX")"
 FAILURES=0
 PASSES=0
 
@@ -34,7 +34,9 @@ assert_fail() {
 }
 
 cleanup() {
-    rm -rf "$TEST_DIR"
+    if [ -n "${TEST_DIR:-}" ] && [ -d "$TEST_DIR" ]; then
+        rm -rf "$TEST_DIR"
+    fi
 }
 trap cleanup EXIT
 
@@ -90,6 +92,29 @@ echo "minimal" >> "$FIXTURE/SKILL.md"
 python3 -c "print(' '.join(['refword'] * 2500))" > "$FIXTURE/references/guide.md"
 assert_fail "references/ file > 2000w fails" "$BUDGET_SCRIPT" "$FIXTURE"
 
+# --- 1e: nested references/ file > 2000 words -> FAIL ---
+FIXTURE="$TEST_DIR/budget-fail-nested-ref"
+mkdir -p "$FIXTURE/references/adapters"
+echo "---" > "$FIXTURE/SKILL.md"
+echo "---" >> "$FIXTURE/SKILL.md"
+echo "minimal" >> "$FIXTURE/SKILL.md"
+python3 -c "print(' '.join(['adapterword'] * 2500))" > "$FIXTURE/references/adapters/codex.md"
+assert_fail "nested references/ file > 2000w fails" "$BUDGET_SCRIPT" "$FIXTURE"
+
+# --- 1f: SKILL.md body with markdown separators > 2000 words -> FAIL ---
+FIXTURE="$TEST_DIR/budget-fail-skill-separators"
+mkdir -p "$FIXTURE"
+{
+    echo "---"
+    echo "title: Test Skill"
+    echo "---"
+    python3 -c "print(' '.join(['before'] * 1500))"
+    echo "---"
+    python3 -c "print(' '.join(['after'] * 800))"
+    echo "---"
+} > "$FIXTURE/SKILL.md"
+assert_fail "SKILL.md body > 2000w with markdown separators fails" "$BUDGET_SCRIPT" "$FIXTURE"
+
 # ============================================================
 # 2. verify-platform-names.sh
 # ============================================================
@@ -140,6 +165,97 @@ cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
 Apply changes with the Edit tool to update files.
 SKILLEOF
 assert_fail "SKILL.md with 'Edit tool' fails" "$PLATFORM_SCRIPT" "$FIXTURE"
+
+# --- 2e: portable workflow reference with "Run Grep" -> FAIL ---
+FIXTURE="$TEST_DIR/platform-fail-workflow"
+mkdir -p "$FIXTURE/references"
+cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
+# My Skill
+
+Use semantic instructions.
+SKILLEOF
+cat > "$FIXTURE/references/workflow.md" << 'SKILLEOF'
+# Workflow
+
+Run Grep before editing shared interfaces.
+SKILLEOF
+assert_fail "portable workflow with 'Run Grep' fails" "$PLATFORM_SCRIPT" "$FIXTURE"
+
+# --- 2f: adapter file with platform names -> PASS ---
+FIXTURE="$TEST_DIR/platform-adapter-pass"
+mkdir -p "$FIXTURE/references/adapters"
+cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
+# My Skill
+
+Search the codebase with semantic verbs.
+SKILLEOF
+cat > "$FIXTURE/references/adapters/claude-code.md" << 'SKILLEOF'
+# Adapter
+
+PreToolUse hooks may block Edit, Write, Bash, or Agent access.
+Use Bash only in this platform adapter example.
+SKILLEOF
+assert_pass "adapter file with platform names passes" "$PLATFORM_SCRIPT" "$FIXTURE"
+
+# --- 2g: platform mapping table with platform names -> PASS ---
+FIXTURE="$TEST_DIR/platform-mapping-pass"
+mkdir -p "$FIXTURE/references"
+cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
+# My Skill
+
+Execute the validation script.
+SKILLEOF
+cat > "$FIXTURE/references/platform-adaptation.md" << 'SKILLEOF'
+# Platform Adaptation
+
+| Action | Claude Code |
+|---|---|
+| Read a file | Read |
+| Run command | Bash |
+
+Don't: Use the Read tool in portable workflow text.
+SKILLEOF
+assert_pass "platform mapping table passes" "$PLATFORM_SCRIPT" "$FIXTURE"
+
+# --- 2h: unmarked imperative tool guidance in core reference -> FAIL ---
+FIXTURE="$TEST_DIR/platform-core-fail"
+mkdir -p "$FIXTURE/references"
+cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
+# My Skill
+
+Search the codebase with semantic verbs.
+SKILLEOF
+cat > "$FIXTURE/references/design-philosophy.md" << 'SKILLEOF'
+# Design
+
+Use Bash to enforce the rule.
+SKILLEOF
+assert_fail "core reference with imperative tool guidance fails" "$PLATFORM_SCRIPT" "$FIXTURE"
+
+# --- 2i: unmarked imperative tool guidance in platform-adaptation -> FAIL ---
+FIXTURE="$TEST_DIR/platform-mapping-unmarked-fail"
+mkdir -p "$FIXTURE/references"
+cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
+# My Skill
+
+Execute commands semantically.
+SKILLEOF
+cat > "$FIXTURE/references/platform-adaptation.md" << 'SKILLEOF'
+# Platform Adaptation
+
+Every portable workflow should use Bash for validation.
+SKILLEOF
+assert_fail "unmarked mapping prose with platform tool guidance fails" "$PLATFORM_SCRIPT" "$FIXTURE"
+
+# --- 2j: lowercase/modal and non-Claude tool names in portable files -> FAIL ---
+FIXTURE="$TEST_DIR/platform-lowercase-modal-fail"
+mkdir -p "$FIXTURE/references"
+cat > "$FIXTURE/SKILL.md" << 'SKILLEOF'
+# My Skill
+
+Agents must use run_shell_command to verify results.
+SKILLEOF
+assert_fail "lowercase/modal non-Claude tool guidance fails" "$PLATFORM_SCRIPT" "$FIXTURE"
 
 # ============================================================
 # 3. verify-artifact-content.sh
@@ -335,6 +451,84 @@ cat > "$FIXTURE" << 'EOF'
 - [ ] Sources check
 EOF
 assert_fail "validation with < 8 checklist items fails" "$ARTIFACT_SCRIPT" "$FIXTURE" "validation"
+
+# ============================================================
+# 4. verify-secrets-safe.sh
+# ============================================================
+echo ""
+echo "=== verify-secrets-safe.sh ==="
+
+SECRETS_SCRIPT="$SCRIPT_DIR/verify-secrets-safe.sh"
+
+FIXTURE="$TEST_DIR/secrets-pass"
+mkdir -p "$FIXTURE"
+cat > "$FIXTURE/notes.md" << 'EOF'
+# Notes
+
+This mentions API_KEY as a placeholder, not a real credential.
+EOF
+assert_pass "placeholder-only secrets scan passes" "$SECRETS_SCRIPT" "$FIXTURE"
+
+FIXTURE="$TEST_DIR/secrets-fail"
+mkdir -p "$FIXTURE"
+{
+    echo "# Notes"
+    echo ""
+    printf 'token: sk-%s%s\n' "abcdefghijklmnopqrstuvwxyz" "123456"
+} > "$FIXTURE/notes.md"
+assert_fail "high-confidence secret pattern fails" "$SECRETS_SCRIPT" "$FIXTURE"
+
+# ============================================================
+# 5. verify-behavior-fixtures.sh
+# ============================================================
+echo ""
+echo "=== verify-behavior-fixtures.sh ==="
+
+BEHAVIOR_SCRIPT="$SCRIPT_DIR/verify-behavior-fixtures.sh"
+
+FIXTURE="$TEST_DIR/behavior-pass"
+mkdir -p "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement"
+cat > "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement/codex-new-expected.md" << 'EOF'
+# Codex-Targeted New Skill Expected Guidance
+
+For a Codex-targeted skill, prefer artifact gates and validation scripts.
+Avoid requiring Claude Code hooks, PreToolUse, or hook installation.
+Use ~/.codex/skills/ for Codex-specific installs and ~/.agents/skills/ for shared installs.
+EOF
+cat > "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement/claude-code-new-expected.md" << 'EOF'
+# Claude Code-Targeted New Skill Expected Guidance
+
+For a Claude Code-targeted skill, PreToolUse hooks are optional blocking enforcement.
+Keep artifact/script fallback guidance.
+EOF
+cat > "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement/portable-boost-expected.md" << 'EOF'
+# Portable Boost Expected Guidance
+
+Portable core defects are separate from Adapter recommendations.
+The report should not mark a portable skill incomplete only because it lacks Claude Code hooks.
+EOF
+assert_pass "behavior fixtures with expected boundaries pass" "$BEHAVIOR_SCRIPT" "$FIXTURE"
+
+FIXTURE="$TEST_DIR/behavior-fail"
+mkdir -p "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement"
+cat > "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement/codex-new-expected.md" << 'EOF'
+# Codex-Targeted New Skill Expected Guidance
+
+Codex-targeted skills must require PreToolUse hook installation.
+Use ~/.codex/skills/ and ~/.agents/skills/.
+EOF
+cat > "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement/claude-code-new-expected.md" << 'EOF'
+# Claude Code-Targeted New Skill Expected Guidance
+
+PreToolUse hooks are optional blocking enforcement with fallback.
+EOF
+cat > "$FIXTURE/docs/specs/fixtures/codex-portable-enforcement/portable-boost-expected.md" << 'EOF'
+# Portable Boost Expected Guidance
+
+Portable core defects are separate from Adapter recommendations.
+The report should not mark a portable skill incomplete only because it lacks Claude Code hooks.
+EOF
+assert_fail "behavior fixtures requiring Codex hooks fail" "$BEHAVIOR_SCRIPT" "$FIXTURE"
 
 # ============================================================
 # Summary

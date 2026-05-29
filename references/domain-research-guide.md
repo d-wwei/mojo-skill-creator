@@ -14,6 +14,18 @@ The research step is NOT optional even when the skill seems straightforward. "I 
 
 ## Research Process
 
+### Privacy Gate
+
+Before searching externally, classify source material:
+
+| Class | Rule |
+|-------|------|
+| Public | Safe to search and cite |
+| Internal/private | Do not paste into search queries or external tools without user consent |
+| Personal/secret | Do not search, upload, or quote; ask for a sanitized summary |
+
+Research should use public sources by default. Never send private repository content, customer data, raw chats, or secrets to external search.
+
 ### Step 1: Identify the Domain
 
 From the skill's use cases, name the real-world discipline. Examples:

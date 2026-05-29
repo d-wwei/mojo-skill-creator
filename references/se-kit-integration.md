@@ -41,6 +41,17 @@ my-skill/
 
 **se-workspace/**: This skill's own evolution data. Read-write by the agent at runtime. Persists across sessions.
 
+## Privacy and Data Governance
+
+Self-evolution is opt-in. Before enabling it, document what is stored and how to delete it.
+
+Red lines:
+- No raw chat transcripts, secrets, credentials, private customer data, or unnecessary PII in `se-workspace/`
+- Store minimized summaries and derived lessons, not verbatim user content
+- Scrub exported skill packages before distribution; do not ship another user's `se-workspace/`
+- Provide a deletion path: removing `se-workspace/` resets learned state
+- If retention matters, set a TTL or review cadence in `se-workspace/manifest.json`
+
 ---
 
 ## Integration Steps (for `new` workflow)

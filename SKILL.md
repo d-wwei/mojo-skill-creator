@@ -1,6 +1,6 @@
 ---
 name: mojo-skill-creator
-description: This skill should be used when the user asks to "create a skill", "make a new skill", "build a skill", "improve a skill", "boost a skill", "upgrade a skill", "audit a skill", or needs guidance on skill design, cross-platform skill creation, or skill quality improvement for any AI agent platform.
+description: Use when the user explicitly invokes "mojo-skill-creator", asks for Mojo-style "new", "boost", or "audit", or needs cross-platform/portable skill design with constraint-first quality, enforcement adapters, or Claude Code/Codex skill portability.
 ---
 
 # Mojo Skill Creator
@@ -15,6 +15,7 @@ Thinks constraints not instructions. Designs from end-user (recipient) perspecti
 
 - **`new`**: Create from scratch → `references/new-workflow.md` (~1900w)
 - **`boost`**: Diagnose and upgrade → `references/boost-workflow.md` (~1900w)
+- **`audit`**: Read-only review → `references/audit-workflow.md` (~500w)
 
 Ask if unspecified.
 
@@ -44,7 +45,7 @@ See: `references/design-philosophy.md` (~1100w)
 - No high-stakes red line in a produced skill left cognitive-only when structural enforcement is feasible. Check: `build/constraint-enforcement-plan.md` classifies each red line's enforcement axis
 - No architecture decision (affecting ≥2 files or constraining future changes) without an ADR. Check: `docs/adr/` contains entry with all 5 sections
 - No breaking change to published interfaces (semver-tagged or distributed) without deprecation. Check: diff interface sections against previous version tag
-- No secret (password, API key, token) transits LLM conversation or appears in logs. Check: grep for credential patterns in transcripts and source
+- No secret (password, API key, token) transits LLM conversation or appears in available logs, artifacts, or source. Check: scan high-confidence credential patterns before release
 
 ## Acceptance
 
@@ -73,10 +74,13 @@ Conditional (B only, in reference file): security layered design (P9), anti-dupl
 
 ## References
 
+Target platform controls produced skill content. Runtime adapters guide local execution only.
+
 | File | Content | Load When |
 |------|---------|-----------|
 | `references/new-workflow.md` (~2000w) | `new` workflow (10 steps + 3d enforcement) | User invokes `new` |
 | `references/boost-workflow.md` (~2000w) | `boost` workflow (4 phases incl. enforcement audit) | User invokes `boost` |
+| `references/audit-workflow.md` (~500w) | Read-only skill audit, no artifacts or edits | User invokes `audit` / review-only |
 | `references/design-philosophy.md` (~1100w) | 7 design principles with examples | Designing red lines, stance, structure |
 | `references/constraint-enforcement-guide.md` (~1100w) | Think/Do axis model + 4 enforcement mechanisms | `new` Step 3d / `boost` Phase 1.9 |
 | `references/platform-adaptation.md` (~900w) | 4-platform tool mapping + fallbacks | Cross-platform decisions |
@@ -86,3 +90,5 @@ Conditional (B only, in reference file): security layered design (P9), anti-dupl
 | `references/se-kit-integration.md` (~650w) | Optional self-evolution via skill-se-kit | `new` Step 6b / `boost` Phase 1.6 |
 | `references/behavioral-eval-guide.md` (~900w) | Optional behavioral eval + surgical fix loop | `new` Step 10 |
 | `references/development-practices.md` (~900w) | Development practices, ADR template, CHANGELOG spec | Designing red lines, reviewing changes |
+| `references/adapters/claude-code.md` (~325w) | Claude Code hooks, tool scoping, install notes | Targeting Claude Code enforcement |
+| `references/adapters/codex.md` (~325w) | Codex artifact/script/patch verification patterns | Targeting Codex enforcement |

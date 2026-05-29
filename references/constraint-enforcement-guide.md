@@ -1,8 +1,8 @@
 # Constraint Enforcement Guide
 
-How to design constraints that agents actually follow. Covers the Think + Do dual-axis model and four structural enforcement mechanisms.
+How to design constraints that agents actually follow. Covers the portable Think + Do model, enforcement strength, and cross-platform mechanisms.
 
-Load this reference when designing red lines (new Step 3b) or auditing enforcement (boost Phase 1.9).
+Load this reference when designing red lines (`new` Step 3d) or auditing enforcement (`boost` Phase 1.9). Load a platform adapter only after a target platform is selected.
 
 ---
 
@@ -10,7 +10,7 @@ Load this reference when designing red lines (new Step 3b) or auditing enforceme
 
 A red line like "No step completed without its artifact" depends on the agent remembering and choosing to comply. Agents routinely skip cognitive-only constraints under pressure, complexity, or simple inattention.
 
-**The fix**: pair every high-stakes constraint with a structural mechanism that enforces compliance without relying on agent memory.
+**The fix**: pair every high-stakes constraint with a structural mechanism that makes non-compliance blocked, detectable, or externally enforced.
 
 ---
 
@@ -20,161 +20,141 @@ Every constraint has two enforcement dimensions:
 
 | Axis | What It Does | Strength | Weakness |
 |------|-------------|----------|----------|
-| **Think** | Tells agent what to do/avoid (red lines, instructions, reminders) | Provides reasoning context; works on all platforms | Depends on compliance; skippable |
-| **Do** | Makes non-compliance impossible or detectable (hooks, gates, scripts) | Structural; works even if agent "forgets" | No reasoning context alone; platform-dependent |
+| **Think** | Explains what to do or avoid: red lines, stance, acceptance criteria | Provides reasoning context; works everywhere | Depends on compliance; skippable |
+| **Do** | Makes violations blocked, detectable, or externally enforced | Works even when the agent forgets | Needs precise mechanics; may be platform-specific |
 
-**Neither axis alone is sufficient.** Think without Do = skippable guidance. Do without Think = blind enforcement without understanding.
+**Neither axis alone is sufficient.** Think without Do is skippable guidance. Do without Think is blind enforcement without understanding.
 
-### Classification Decision
-
-For each red line in a skill, ask:
-
-1. **Is this constraint high-stakes?** (Violation causes incorrect output, data loss, or cascading errors)
-   - Yes → MUST have Do-axis enforcement
-   - No → Think-axis sufficient
-
-2. **Can this be checked mechanically?** (File existence, word count, pattern match, command output)
-   - Yes → Choose a Do mechanism below
-   - No → Strengthen Think-axis (make instruction more specific, add anti-rationalization table)
-
-3. **Must it work cross-platform?** 
-   - Yes → Use artifact gates or verification scripts (portable)
-   - No → Hooks are acceptable (platform-specific)
+Glossary:
+- Portable core: guidance that should work across all target platforms
+- Adapter: platform-specific enforcement notes loaded only when needed
+- Runtime: the agent environment doing the work now
+- Think-axis: reasoning guidance the agent follows
+- Do-axis: structural checks or gates that catch violations
 
 ---
 
-## Four Enforcement Mechanisms
+## Enforcement Strength
+
+Classify every Do mechanism by strength:
+
+| Strength | Meaning | Examples |
+|---|---|---|
+| Advisory | Reminds the agent, but violation is easy | checklist text, comments |
+| Detectable | Violation can be found after the fact | validation scripts, pattern scans, command output review |
+| Blocking | Violation prevents workflow completion | artifact gate with required content, CI gate |
+| External | Enforced outside the agent session | CI, pre-commit, repository policy |
+
+Do not overclaim. A checklist is advisory unless another gate requires it. Script output is detectable unless wired into a blocking workflow or CI.
+
+---
+
+## Classification Decision
+
+For each red line in a skill, ask:
+
+1. **Is this constraint high-stakes?** Violation causes incorrect output, data loss, or cascading errors.
+   - Yes -> assign Think + Do enforcement.
+   - No -> Think-axis may be sufficient.
+
+2. **Can this be checked mechanically?** File existence, word count, pattern match, command output, or test result.
+   - Yes -> choose a portable Do mechanism below.
+   - No -> strengthen Think-axis with specific anti-rationalization guidance.
+
+3. **Is platform-specific enforcement needed?**
+   - Yes -> load the relevant adapter from `references/adapters/`.
+   - No -> keep the mechanism portable.
+
+---
+
+## Portable Do Mechanisms
 
 ### 1. Artifact Gates
 
-**What**: Block progression to step N+1 until step N's output file exists AND contains required content.
+**What**: Do not proceed to the next phase until a named file exists and contains required content.
 
-**When to use**: Workflow steps that produce documents, research, analysis, or plans.
+**Use when**: Workflow steps produce research, plans, diagnoses, or validation reports.
 
-**Template** (in workflow file):
+**Template**:
 ```markdown
 **Artifact**: Write to `{path}`. Gate: file must contain sections [{list}].
-Do NOT proceed to Step N+1 until verified.
+Do not proceed until the artifact exists and passes the gate.
 ```
 
 **Strength levels**:
-- **Weak**: File exists at path (agent can create empty file to pass)
-- **Medium**: File exists + contains required section headings
-- **Strong**: File exists + sections contain minimum content (e.g., ≥ N items in a list)
+- Weak: file exists
+- Medium: file exists + required section headings
+- Strong: file exists + sections contain minimum content, such as >= N items
 
-**Design rule**: Default to medium. Use strong for high-stakes gates (research quality, red line count).
+Default to medium. Use strong for research quality, red-line count, and final validation.
 
-**Portability**: Works on all platforms. No hooks needed — instruction-based with checkable criteria.
+### 2. Verification Scripts
 
-### 2. Hook Templates
+**What**: Self-contained scripts that produce pass/fail diagnostics.
 
-**What**: Platform hooks that intercept tool calls and block/warn based on conditions.
+**Use when**: Quality standards can be measured by word count, item count, reference existence, format, or structural completeness.
 
-**When to use**: Preventing dangerous actions (editing without research, deleting files, skipping phases).
-
-**Template** (PreToolUse hook):
-```
-IF agent calls [Edit/Write] on [target pattern]
-AND [precondition not met]
-THEN block with message: "[what to do first]"
-```
-
-**Example**: Block editing a skill's SKILL.md before `build/domain-research.md` exists:
-```
-Trigger: Edit/Write on */SKILL.md
-Condition: build/domain-research.md does not exist
-Action: deny — "Complete domain research first (Step 2)"
-```
-
-**Portability**: Claude Code hooks, Codex callbacks, Gemini CLI hooks. Not universal — always pair with Think-axis fallback instruction.
-
-**Bundling**: Hook templates go in the skill's `hooks/` directory. End users install per their platform's mechanism.
-
-### 3. Verification Scripts
-
-**What**: Scripts that check output quality after a step completes, producing pass/fail results.
-
-**When to use**: Quality standards that can be measured (word count, item count, pattern presence, structural completeness).
-
-**Template** (shell script):
+**Template**:
 ```bash
 # verify-{check-name}.sh
-# Returns 0 (pass) or 1 (fail) with diagnostic message
+# Returns 0 for pass, non-zero for fail, with diagnostic output.
 ```
 
-**Common checks**:
-- Red line count: `grep -c "^- " SKILL.md | awk '{if ($1 >= 5) exit 0; else exit 1}'`
-- Token budget: `wc -w < SKILL.md` compared to threshold
-- Required sections: grep for section headings
-- Cross-reference integrity: verify all referenced files exist
+Scripts are detectable by default. They become blocking only when the workflow or CI refuses completion on failure.
 
-**Portability**: Shell scripts work everywhere. The workflow instructs: "Run `scripts/verify-X.sh` and paste output before proceeding."
+### 3. Required Evidence
 
-**Bundling**: Scripts go in the skill's `scripts/` directory. Self-contained, no external dependencies.
+**What**: A workflow requires command output, checklist status, or validation notes before completion.
 
-### 4. Sub-Agent Scoping
+**Use when**: A human needs an audit trail or the check cannot be fully automated.
 
-**What**: When a skill dispatches sub-agents, restrict their tool access to prevent unintended actions.
+Evidence is detectable, not automatically blocking, unless paired with an artifact gate.
 
-**When to use**: Skills with review steps, research steps, or any delegated work.
+### 4. Existing External Gates
 
-**Template** (in workflow):
-```markdown
-Dispatch review sub-agent with:
-- Allowed tools: Read, Grep, Glob, LSP
-- Disallowed: Edit, Write, Bash, Agent
-- Purpose: review only, no modifications
-```
+**What**: Repository-level checks such as CI, pre-commit, or release gates.
 
-**Scope patterns**:
+**Use when**: The project already has an external mechanism. Do not add dependencies just to enforce a skill rule.
 
-| Role | Allowed | Disallowed | Rationale |
-|------|---------|-----------|-----------|
-| Reviewer | Read, Grep, Glob | Edit, Write, Bash | Can only read, not modify |
-| Researcher | Read, Grep, WebSearch, WebFetch | Edit, Write | Can search, not change code |
-| Implementer | Read, Grep, Edit, Write, Bash | Agent | Can code, not spawn more agents |
+---
 
-**Portability**: Works on Claude Code (Agent tool prompt), Codex (tool restrictions), Gemini CLI (tool config). Specify restrictions in natural language — the dispatching agent enforces.
+## Platform Adapters
+
+Platform-specific mechanisms live outside the portable core:
+
+- Claude Code: `references/adapters/claude-code.md`
+- Codex: `references/adapters/codex.md`
+
+Load an adapter only when the user names a target platform, when the current runtime must shape enforcement, or when auditing a platform-specific skill.
+
+Portable skills must not depend on one platform's enforcement as their only Do mechanism. Pair adapter-specific mechanisms with artifact gates, verification scripts, or external checks unless the skill is explicitly single-platform.
 
 ---
 
 ## Applying to Skill Design
 
-### In `new` Workflow (Step 3b)
+### In `new` Workflow
 
-After designing red lines in Step 3, classify each:
+After designing red lines, classify each:
 
-| Red Line | Stakes | Mechanically Checkable? | Enforcement Axis | Mechanism |
-|----------|--------|------------------------|-------------------|-----------|
-| (example) | High | Yes — file count | Think + Do | Artifact gate (strong) |
-| (example) | Medium | No — subjective | Think only | Anti-rationalization table |
+| Red Line | Stakes | Mechanically Checkable? | Strength | Mechanism |
+|----------|--------|--------------------------|----------|-----------|
+| (example) | High | Yes — file count | Blocking | Strong artifact gate |
+| (example) | Medium | Yes — pattern scan | Detectable | Verification script |
+| (example) | Low | No | Advisory | Specific Think-axis wording |
 
-Write the classification to `build/constraint-enforcement-plan.md`.
+Write the classification to `build/constraint-enforcement-plan.md`. For each Do mechanism, specify the gate, script, evidence requirement, or adapter pointer.
 
-For each Do-axis constraint, write the specific mechanism (hook template, script, gate condition) into the plan. These get implemented in Step 6 alongside the skill.
-
-### In `boost` Workflow (Phase 1.9)
+### In `boost` Workflow
 
 Audit existing red lines:
 
-1. List all red lines from SKILL.md
-2. For each: is there a Do-axis mechanism currently? (hook, gate, script, sub-agent scope)
-3. Calculate enforcement ratio: `(red lines with Do) / (total red lines)`
-4. Identify top 3 highest-stakes Think-only constraints → prescribe Do mechanisms
+1. List all red lines from `SKILL.md`.
+2. For each: Think-only or Think+Do? If Do, what strength and mechanism?
+3. Identify mechanisms that belong in the portable core versus a platform adapter.
+4. Calculate enforcement ratio: red lines with Do mechanisms / total red lines.
+5. Identify top 3 highest-stakes Think-only constraints for upgrade.
 
 Write audit to `diagnosis/constraint-enforcement-audit.md`.
 
-Target enforcement ratio: ≥ 30% of red lines have Do-axis mechanisms. 100% is not the goal — low-stakes constraints work fine as Think-only.
-
----
-
-## Platform Compatibility Matrix
-
-| Mechanism | Claude Code | Codex | Gemini CLI | OpenClaw |
-|-----------|------------|-------|-----------|---------|
-| Artifact gates | Yes (instruction) | Yes (instruction) | Yes (instruction) | Yes (instruction) |
-| Hook templates | Yes (settings.json) | Partial (callbacks) | Yes (hooks config) | No |
-| Verification scripts | Yes (Bash tool) | Yes (shell) | Yes (shell) | Yes (shell) |
-| Sub-agent scoping | Yes (Agent tool) | Yes (tool restrictions) | Yes (tool config) | Partial |
-
-**Rule**: Every Do-axis constraint must have at least one mechanism that works on ALL four platforms. Hooks alone are insufficient — always pair with an artifact gate or verification script.
+Target enforcement ratio: >= 30% of red lines have Do-axis mechanisms. 100% is not the goal; low-stakes constraints can remain Think-only.

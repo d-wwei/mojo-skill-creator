@@ -4,3 +4,11 @@
 # Agent Recall data
 .assistant/
 .agent-recall/
+
+# Generated skill audit/build artifacts
+build/
+diagnosis/
+se-workspace/
+*.log
+*.transcript
+*.transcript.*

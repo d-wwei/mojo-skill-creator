@@ -1,4 +1,4 @@
-<!-- Synced with README.md as of 2026-04-13 -->
+<!-- Synced with README.md as of 2026-05-28 -->
 
 [English](README.md) | [中文](README.zh-CN.md)
 
@@ -18,10 +18,11 @@ Mojo Skill Creator 把这些思考打包成了一个可用的工具。它本身�
 
 ## 是什么
 
-Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 文件，总计约 8,500 词）。安装到任何支持 SKILL.md 格式的 Agent 上，它就获得两个能力：
+Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 分层 references、平台 adapters 和验证脚本）。安装到任何支持 SKILL.md 格式的 Agent 上，它就获得两个能力：
 
-- **`new`** — 9 步引导流程，从零创建技能，从领域专家研究开始
+- **`new`** — 10 步引导流程，从零创建技能，从领域专家研究开始
 - **`boost`** — 4 阶段诊断升级流程，针对已有技能
+- **`audit`** — 只读审计路径，用于先评估技能，再决定是否升级
 
 产出的每个技能都跨平台（Claude Code、Codex、Gemini CLI、OpenClaw）且 Token 高效。
 
@@ -36,6 +37,8 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 - **四层 Token 架构。** 技能不把所有东西塞进一个文件。元数据(~100词) → 路由(≤1000词) → 工作流(≤2000词) → 参考资料(按需)。每次调用只加载一个工作流。
 
 - **默认跨平台。** 指令使用语义化动词（「读取文件」「搜索代码库」），不用平台特有工具名。一个技能包在四个平台上直接可用，不需要适配。
+
+- **可移植核心 + 适配器。** 核心约束模型保持平台中立，Claude Code 和 Codex 的执行细节放进按需加载的 adapter references。
 
 - **可选自进化。** 技能可以打包 [skill-se-kit](https://github.com/d-wwei/skill-se-kit)（~48KB）来从自身使用中学习。每次任务完成后，子 Agent 提取反馈、记录经验、更新技能库——技能随使用自动改进，无需手动干预。se-kit 打包在技能内部，终端用户不需要额外安装。技能作者通过 `boost` 更新打包版本后重新分发。
 
@@ -68,7 +71,7 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 
 ### `boost` — 升级已有技能（4 阶段）
 
-**Phase 1：诊断** — 8 项检查：结构审计、知识层级诊断、上下文效率、人类可审计性、跨平台兼容、自进化状态、领域最佳实践研究（对比技能工作流 vs 专家工作流）、研究综合（修补还是重构？）。
+**Phase 1：诊断** — 结构审计、知识层级诊断、上下文效率、人类可审计性、跨平台兼容、自进化状态、领域最佳实践研究、研究综合、约束执行力审计。
 
 **Phase 2：处方** — 架构修复 → 机械修复 → 内容升级，严格按序。如果研究综合发现工作流存在结构性差距，处方从工作流重构开始，不是内容润色。
 
@@ -89,17 +92,25 @@ Mojo Skill Creator 本身是一个 AI Agent 技能（SKILL.md + 8 个 reference 
 
 ```bash
 git clone https://github.com/d-wwei/mojo-skill-creator.git
-ln -sf "$(pwd)/mojo-skill-creator" ~/.claude/skills/mojo-skill-creator
+ln -sf "$(pwd)/mojo-skill-creator" ~/.claude/skills/mojo-skill-creator   # Claude Code
+ln -sf "$(pwd)/mojo-skill-creator" ~/.codex/skills/mojo-skill-creator    # Codex 专用
+ln -sf "$(pwd)/mojo-skill-creator" ~/.agents/skills/mojo-skill-creator   # 支持时作为共享安装
 ```
 
-对 Agent 说：「创建一个新技能」或「升级这个技能」。
+对 Agent 说：「用 mojo-skill-creator new」「用 mojo-skill-creator boost」或「用 mojo-skill-creator audit」。
+
+## 验证
+
+```bash
+make verify
+```
 
 ### 支持平台
 
 | 平台 | Skill 路径 |
 |------|-----------|
 | Claude Code | `~/.claude/skills/` |
-| Codex | `~/.agents/skills/` |
+| Codex | `~/.codex/skills/` 用于 Codex 专用安装；支持时可用 `~/.agents/skills/` 做共享安装 |
 | Gemini CLI | `~/.gemini/skills/` |
 | OpenClaw | `~/.openclaw/skills/` |
 

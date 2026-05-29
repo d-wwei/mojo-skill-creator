@@ -32,13 +32,14 @@ Where each platform looks for skills:
 | Platform | User-global | Project-local | Shared |
 |----------|------------|---------------|--------|
 | Claude Code | `~/.claude/skills/` | project plugins | — |
-| Codex | `~/.agents/skills/` | `.agents/skills/` | — |
+| Codex | `~/.codex/skills/` for Codex-specific skills; `~/.agents/skills/` for shared skills | `.agents/skills/` | — |
 | Gemini CLI | `~/.gemini/skills/` | `.gemini/skills/` | `~/.agents/skills/` |
 | OpenClaw | `~/.openclaw/skills/` | workspace `skills/` | `~/.agents/skills/` |
 
 **Installation**: Symlink the skill directory into the platform's discovery path:
 ```bash
 ln -sf /path/to/my-skill ~/.claude/skills/my-skill
+ln -sf /path/to/my-skill ~/.codex/skills/my-skill
 ln -sf /path/to/my-skill ~/.agents/skills/my-skill
 ln -sf /path/to/my-skill ~/.gemini/skills/my-skill
 ```
@@ -82,6 +83,22 @@ When a skill MUST reference specific tool behavior (e.g., explaining search synt
 - **Gemini CLI**: grep_search uses similar regex syntax
 - **Codex**: Native search tools support standard regex
 ```
+
+---
+
+## Adapter Loading
+
+Keep portable workflow files platform-neutral. Load platform adapters only when target-platform decisions matter:
+
+1. User names a target platform -> load that adapter for produced-skill guidance.
+2. User asks for portable/all-four -> stay on core guidance; mention adapter tradeoffs only for enforcement choices.
+3. Current runtime differs from target -> use the runtime adapter only for local execution discipline, not generated skill content.
+4. Auditing an existing skill -> infer targets from README, install paths, frontmatter, or adapter docs; if unclear, report ambiguity and start with portable-core findings.
+
+Adapters:
+
+- Claude Code enforcement: `references/adapters/claude-code.md`
+- Codex enforcement: `references/adapters/codex.md`
 
 ---
 

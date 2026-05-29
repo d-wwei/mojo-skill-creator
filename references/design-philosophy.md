@@ -165,7 +165,7 @@ If a skill description contains "and" connecting two distinct capabilities, it s
 Every critical constraint must exist on two axes simultaneously:
 
 - **Think axis** — cognitive constraints the agent follows voluntarily: red lines, acceptance criteria, stance directives. These give the agent *reasoning context* for why a constraint exists.
-- **Do axis** — structural enforcement that makes violation impossible or immediately detectable: hooks, artifact gates, verification scripts, sub-agent scoping. These work even when the agent "forgets."
+- **Do axis** — structural enforcement that makes violations blocked, detectable, or externally enforced: artifact gates, verification scripts, required evidence, CI, or platform adapters. These work even when the agent "forgets."
 
 ### Why Both Axes
 
@@ -177,8 +177,8 @@ The combination is what produces reliable behavior: the Think axis makes the age
 
 | Think-only (fragile) | Think + Do (robust) |
 |---------------------|---------------------|
-| "Always grep callers before modifying a public interface." | Same red line + a `PreToolUse` hook that blocks `Edit` on interface files if no `Grep` was executed this session. |
-| "Run tests before claiming done." | Same red line + an artifact gate that requires test-output evidence before the completion step unlocks. |
+| "Check callers before modifying a public interface." | Same red line + a required impact artifact listing callers and compatibility risk before edits begin. |
+| "Run tests before claiming done." | Same red line + an artifact gate that requires test-output evidence before completion. |
 
 ### Design Test
 

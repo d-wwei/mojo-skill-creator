@@ -73,8 +73,24 @@ case "$CHECK" in
         else
             echo "PASS: Think/Do classification table found"
         fi
-        TOTAL_ROWS=$(gcount '\|.*\|.*\|' "$FILE")
-        DO_ROWS=$(gcounti '\|.*Do.*\|' "$FILE")
+        COUNTS=$(awk '
+            BEGIN { in_table = 0; total = 0; do_rows = 0 }
+            /^\|/ {
+                if ($0 ~ /\|.*(Axis|Enforcement Axis).*\|/) { in_table = 1; next }
+                if (in_table && $0 ~ /^\|[[:space:]-]+\|/) { next }
+                if (in_table) {
+                    total++
+                    if ($0 ~ /\|[[:space:]]*(Do|Think[[:space:]]*\+[[:space:]]*Do)[[:space:]]*\|/) {
+                        do_rows++
+                    }
+                }
+                next
+            }
+            in_table && !/^\|/ { in_table = 0 }
+            END { print total ":" do_rows }
+        ' "$FILE")
+        TOTAL_ROWS="${COUNTS%%:*}"
+        DO_ROWS="${COUNTS##*:}"
         if [ "$TOTAL_ROWS" -gt 0 ]; then
             RATIO=$((DO_ROWS * 100 / TOTAL_ROWS))
             if [ "$RATIO" -lt 30 ]; then
@@ -101,7 +117,7 @@ case "$CHECK" in
         fi
         ;;
     validation)
-        ITEMS=$(gcount '^\s*-\s*\[[ x]\]' "$FILE")
+        ITEMS=$(gcount '^[[:space:]]*-[[:space:]]*\[[ x]\]' "$FILE")
         if [ "$ITEMS" -lt 8 ]; then
             echo "FAIL: validation has ${ITEMS} checklist items (need ≥8)"
             FAIL=1
